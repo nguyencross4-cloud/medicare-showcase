@@ -1,750 +1,157 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediCare - Quản lý lịch uống thuốc</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--p:#0d7c8f;--pd:#0a5f6e;--bg:#f2f6f8;--card:#fff;--line:#e0e8ec;--tx:#1f2d33;--mu:#66787f;--ok:#2e9e6b;--warn:#e8a317;--bad:#d6453d}
-body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--tx)}
-.app-container{display:flex;min-height:100vh}
-.sidebar{width:240px;background:var(--pd);color:#fff;flex-shrink:0}
-.sidebar-header{display:flex;align-items:center;gap:10px;padding:22px 20px}
-.logo-icon{font-size:26px;color:#ffd166}
-.nav-links{list-style:none}
-.nav-links li{padding:14px 20px;cursor:pointer;color:#cfe6ea;display:flex;gap:12px;align-items:center}
-.nav-links li:hover{background:rgba(255,255,255,.08)}
-.nav-links li.active{background:var(--p);color:#fff;border-left:4px solid #ffd166}
-.main-content{flex:1;padding:0 24px 40px;min-width:0}
-.top-header{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:12px;flex-wrap:wrap}
-.search-bar{background:#fff;border:1px solid var(--line);border-radius:22px;padding:8px 16px;display:flex;gap:8px;align-items:center;min-width:240px}
-.search-bar input{border:0;outline:0;flex:1;font:inherit}
-.user-profile{display:flex;align-items:center;gap:14px}
-.notification-icon{color:var(--mu)}
-.avatar{width:36px;height:36px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center}
-.conn-badge{font-size:13px;padding:4px 12px;border-radius:14px;background:#e3f5ec;color:var(--ok)}
-.conn-badge.off{background:#fde8e6;color:var(--bad)}
-.conn-badge i{font-size:8px}
-.content-section{display:none}.content-section.active{display:block}
-.section-title{font-size:22px;margin-bottom:16px}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px}
-.section-header .section-title{margin:0}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:20px}
-.stat-card{background:var(--card);border-radius:12px;padding:18px;display:flex;gap:16px;align-items:center;border:1px solid var(--line)}
-.stat-icon{width:48px;height:48px;border-radius:12px;background:#dff1f4;color:var(--p);display:grid;place-items:center;font-size:20px}
-.stat-info h3{font-size:14px;color:var(--mu);font-weight:400}
-.stat-info p{font-size:28px;font-weight:700}
-.dashboard-widgets,.device-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.widget{background:var(--card);border-radius:12px;padding:18px;border:1px solid var(--line)}
-.widget h3{font-size:16px;margin-bottom:12px;display:flex;gap:8px;align-items:center}
-.today-item,.recent-activities li,.tl-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}
-.recent-activities{list-style:none}
-.sub{font-size:13px;color:var(--mu)}
-.tag{font-size:12px;border-radius:12px;padding:2px 10px;background:#e4eef1;color:var(--pd);white-space:nowrap}
-.tag.done{background:var(--ok);color:#fff}.tag.now{background:var(--warn);color:#2b2100}
-.btn{border:0;border-radius:8px;padding:9px 16px;cursor:pointer;font:inherit}
-.btn-primary{background:var(--p);color:#fff}.btn-primary:hover{background:var(--pd)}
-.btn-secondary{background:#fff;color:var(--pd);border:1px solid var(--line)}
-.btn-danger{background:#fff;color:var(--bad);border:1px solid var(--line)}
-.btn-sm{padding:4px 10px;font-size:13px}
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.btn:focus-visible,.form-control:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
-.table-controls,.schedule-filters{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.form-control{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font:inherit;background:#fff}
-.table-controls .form-control,.schedule-filters .form-control{max-width:280px}
-.table-container{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px}
-.data-table{width:100%;border-collapse:collapse}
-.data-table th,.data-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
-.data-table th{background:#e9f1f3;font-weight:500}
-.face{background:var(--pd);color:#fff;border-radius:6px;padding:2px 9px;font-weight:700}
-.medications-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.med-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px}
-.med-card h4{font-size:16px}
-.med-card label{font-size:13px;color:var(--mu);display:grid;gap:4px}
-.timeline-container{display:grid;gap:10px}
-.tl-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.ai-container{display:grid;grid-template-columns:1fr 1.3fr;gap:16px}
-.ai-input-area,.ai-result-area{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
-.ai-card{border-left:4px solid var(--p);background:#f2f9fa;border-radius:8px;padding:12px;margin-bottom:10px}
-.empty-state{text-align:center;color:var(--mu);padding:30px 10px}
-.empty-state i{font-size:36px;margin-bottom:10px;display:block}
-#ai-typing-indicator{display:flex;align-items:center;gap:6px;color:var(--mu)}
-.typing-dot{width:8px;height:8px;border-radius:50%;background:var(--p);animation:b 1s infinite}
-.typing-dot:nth-child(2){animation-delay:.15s}.typing-dot:nth-child(3){animation-delay:.3s}
-@keyframes b{50%{opacity:.25}}
-.hidden{display:none!important}
-.modal{display:none;position:fixed;inset:0;background:rgba(10,40,48,.55);z-index:50;align-items:center;justify-content:center;padding:16px}
-.modal.show{display:flex}
-.modal-content{background:#fff;border-radius:14px;width:min(500px,100%);max-height:92vh;overflow:auto}
-.modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
-.close-btn{font-size:26px;cursor:pointer;color:var(--mu)}
-.modal-body{padding:20px}
-.form-group{margin-bottom:12px;display:grid;gap:4px}
-.form-group label{font-size:14px;font-weight:500}
-.form-row{display:flex;gap:12px}.form-row .half{flex:1}
-.checkbox-group{display:flex;gap:14px;flex-wrap:wrap}
-.checkbox-group label{font-weight:400;display:flex;gap:6px;align-items:center}
-.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
-.hint{color:var(--mu);font-size:13px}
-.console{background:#0f2e2b;color:#bfe9d9;border-radius:10px;padding:12px;height:260px;overflow:auto;font-size:13px;white-space:pre-wrap}
-.how-to{padding-left:18px;display:grid;gap:8px;margin-bottom:10px}
-@media(max-width:800px){.sidebar{width:64px}.sidebar h2,.nav-links li{font-size:0}.nav-links li i{font-size:18px}.dashboard-widgets,.device-grid,.ai-container{grid-template-columns:1fr}}
-
-.ph{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#dfe9ec;flex-shrink:0}
-.ph.big{width:96px;height:96px}
-.who{display:flex;align-items:center;gap:10px}
-.photo-row{display:flex;gap:14px;align-items:center}
-.btn-col{display:grid;gap:6px}
-#cam-box{margin-top:10px;display:grid;gap:8px;justify-items:start}
-#cam-video{width:100%;max-width:320px;border-radius:10px;background:#000;transform:scaleX(-1)}
-#toasts{position:fixed;right:16px;top:16px;display:grid;gap:8px;z-index:100}
-.toast{background:#fff;border-left:5px solid var(--p);border-radius:10px;padding:10px 14px;box-shadow:0 6px 20px rgba(0,0,0,.18);display:flex;gap:10px;align-items:center;max-width:340px;font-size:14px}
-.toast.ok{border-color:var(--ok)}.toast.warn{border-color:var(--warn)}.toast.bad{border-color:var(--bad)}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MediCare – Hệ thống phát thuốc thông minh | HCM-UTE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;color-scheme:light;--card:#fff;--tx:#1b2430;--mu:#5d6876;--pri:#0b3a6e;--red:#b3262d;--ln:#d3d9e0;--nv:#0b3a6e;--v1:#fff;--v2:#e9edf2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15.5px/1.65 "Be Vietnam Pro","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;counter-reset:s}
+.w{max-width:1120px;margin:auto;padding:0 20px}
+header{background:var(--card);border-top:4px solid var(--red);border-bottom:1px solid var(--ln);color:var(--pri)}
+.hd{display:flex;align-items:center;gap:18px;padding:18px 0 14px;flex-wrap:wrap}
+.hd img{height:74px;background:#fff;border-radius:2px}
+.hd h1{margin:0;font:600 clamp(21px,3.6vw,30px)/1.2 "Be Vietnam Pro","Segoe UI",system-ui,sans-serif;letter-spacing:.2px}
+.hd p{margin:3px 0 0;color:var(--mu);font-size:14px}
+nav{display:flex;gap:26px;padding:0 0 12px;flex-wrap:wrap;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+nav a{color:var(--pri);text-decoration:none;font-weight:600}nav a:hover{opacity:1;text-decoration:underline}
+section{padding:40px 0 8px}
+h2{margin:0 0 4px;font:600 26px/1.25 "Be Vietnam Pro","Segoe UI",system-ui,sans-serif;color:var(--tx);padding-bottom:8px;border-bottom:1px solid var(--ln)}
+h2::before{counter-increment:s;content:counter(s,decimal-leading-zero) "  ";color:var(--red);font-size:.8em}
+.sub{color:var(--mu);margin:10px 0 18px;font-size:14.5px}
+.v{display:grid;grid-template-columns:1.8fr 1fr;gap:18px}
+.cvb{position:relative;height:540px;background:radial-gradient(circle at 50% 30%,var(--v1),var(--v2));border:1px solid var(--ln)}
+canvas{width:100%;height:100%;display:block;touch-action:none}
+.hint{position:absolute;left:12px;bottom:8px;font-size:12px;color:var(--mu);pointer-events:none;letter-spacing:.03em}
+.side{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border:1px solid var(--ln);padding:16px 18px}
+.card h3{margin:0 0 8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--pri)}
+.btns{display:flex;gap:8px}
+button{font:600 12.5px/1 inherit;font-family:inherit;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;border:1px solid var(--pri);background:var(--card);color:var(--pri);border-radius:2px;padding:10px 14px}
+button.on,button:hover{background:var(--pri);color:var(--card)}
+#pl{display:flex;flex-direction:column}
+#pl button{text-align:left;border:0;border-bottom:1px solid var(--ln);background:none;color:var(--tx);border-radius:0;text-transform:none;letter-spacing:0;font-weight:400;font-size:13.5px;padding:6px 6px}
+#pl button.on,#pl button:hover{background:var(--pri);color:var(--card)}
+#pd{font-size:14.5px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}
+dl{display:grid;grid-template-columns:auto 1fr;margin:0}
+dt,dd{margin:0;padding:5px 0;border-bottom:1px solid var(--ln)}dt{color:var(--mu);padding-right:16px}dd{font-weight:600}
+ol,ul{margin:0;padding-left:20px}li{margin:4px 0}
+.warn{border-color:var(--red);background:rgba(179,38,45,.06)}.warn h3{color:var(--red)}
+.tw{overflow-x:auto;padding:0}
+table{border-collapse:collapse;width:100%;min-width:480px}
+th,td{padding:10px 14px;border-bottom:1px solid var(--ln);text-align:left}
+th{background:rgba(120,150,190,.13);color:var(--pri);font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+tr:nth-child(even) td{background:rgba(127,140,160,.07)}
+footer{margin-top:40px;background:var(--card);border-top:1px solid var(--ln);color:var(--mu);text-align:center;padding:18px;font-size:13px}
+@media(max-width:820px){.v{grid-template-columns:1fr}.cvb{height:400px}}
 </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-heartbeat logo-icon"></i>
-                <h2>MediCare</h2>
-            </div>
-            <ul class="nav-links">
-                <li class="active" data-target="dashboard-section"><i class="fas fa-home"></i> Tổng quan</li>
-                <li data-target="patients-section"><i class="fas fa-users"></i> Bệnh nhân</li>
-                <li data-target="medications-section"><i class="fas fa-pills"></i> Loại thuốc</li>
-                <li data-target="schedules-section"><i class="fas fa-calendar-alt"></i> Lịch uống thuốc</li>
-                <li data-target="ai-section"><i class="fas fa-robot"></i> Đề xuất AI</li>
-                <li data-target="device-section"><i class="fas fa-plug"></i> Kết nối máy</li>
-            </ul>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="top-header">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Tìm kiếm...">
-                </div>
-                <div class="user-profile">
-                    <span id="conn-badge" class="conn-badge off"><i class="fas fa-circle"></i> <span id="conn-text">Chưa kết nối máy</span></span>
-                    <i class="fas fa-bell notification-icon"></i>
-                    <div class="avatar"><i class="fas fa-user-md"></i></div>
-                    <span>Bác sĩ Quản Trị</span>
-                </div>
-            </header>
-
-            <!-- Dashboard Section -->
-            <section id="dashboard-section" class="content-section active">
-                <h2 class="section-title">Tổng quan hệ thống</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-users"></i></div>
-                        <div class="stat-info">
-                            <h3>Tổng bệnh nhân</h3>
-                            <p id="stat-total-patients">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-file-medical"></i></div>
-                        <div class="stat-info">
-                            <h3>Đơn thuốc đang dùng</h3>
-                            <p id="stat-active-prescriptions">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                        <div class="stat-info">
-                            <h3>Cần uống hôm nay</h3>
-                            <p id="stat-due-today">0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-widgets">
-                    <div class="widget">
-                        <h3><i class="fas fa-calendar-day"></i> Lịch uống thuốc hôm nay</h3>
-                        <div class="today-schedules" id="today-schedules-list">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                    <div class="widget">
-                        <h3><i class="fas fa-history"></i> Hoạt động gần đây</h3>
-                        <ul class="recent-activities" id="recent-activities-list">
-                            <!-- Populated by JS -->
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Patients Section -->
-            <section id="patients-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Quản lý bệnh nhân</h2>
-                    <button class="btn btn-primary" onclick="openModal('patient-modal')"><i class="fas fa-plus"></i> Thêm Bệnh Nhân</button>
-                </div>
-                <div class="table-controls">
-                    <input type="text" id="search-patient" placeholder="Tìm tên bệnh nhân..." class="form-control">
-                </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Face ID</th>
-                                <th>Tên Bệnh Nhân</th>
-                                <th>Tuổi</th>
-                                <th>Giới tính</th>
-                                <th>Điện thoại</th>
-                                <th>Tình trạng bệnh</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody id="patients-table-body">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Medications Section -->
-            <section id="medications-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Danh mục thuốc</h2>
-                </div>
-                <div class="table-controls">
-                    <input type="text" id="search-medication" placeholder="Tìm tên thuốc..." class="form-control">
-                    <select id="filter-medication-type" class="form-control">
-                        <option value="all">Tất cả loại thuốc</option>
-                        <!-- Populated by JS -->
-                    </select>
-                </div>
-                <div class="medications-grid" id="medications-grid">
-                    <!-- Populated by JS -->
-                </div>
-            </section>
-
-            <!-- Schedules Section -->
-            <section id="schedules-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Lịch uống thuốc</h2>
-                    <button class="btn btn-primary" onclick="openModal('schedule-modal')"><i class="fas fa-plus"></i> Thêm Lịch</button>
-                </div>
-                <div class="schedule-filters">
-                    <select id="schedule-patient-filter" class="form-control">
-                        <option value="all">Tất cả bệnh nhân</option>
-                        <!-- Populated by JS -->
-                    </select>
-                </div>
-                <div class="timeline-container" id="schedule-timeline">
-                    <!-- Populated by JS -->
-                </div>
-            </section>
-
-            <!-- AI Suggestions Section -->
-            <section id="ai-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Đề xuất thuốc bằng AI</h2>
-                </div>
-                <div class="ai-container">
-                    <div class="ai-input-area">
-                        <div class="form-group">
-                            <label>Chọn Bệnh Nhân:</label>
-                            <select id="ai-patient-select" class="form-control">
-                                <option value="">-- Chọn bệnh nhân --</option>
-                                <!-- Populated by JS -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Hoặc nhập tình trạng bệnh:</label>
-                            <textarea id="ai-conditions-input" class="form-control" rows="3" placeholder="Ví dụ: Đau đầu, sốt cao, huyết áp cao..."></textarea>
-                        </div>
-                        <button class="btn btn-primary" onclick="generateAISuggestions()"><i class="fas fa-magic"></i> Phân Tích & Đề Xuất</button>
-                    </div>
-                    <div class="ai-result-area">
-                        <div id="ai-typing-indicator" class="hidden">
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                            <span>AI đang phân tích...</span>
-                        </div>
-                        <div id="ai-results" class="ai-results">
-                            <div class="empty-state">
-                                <i class="fas fa-robot"></i>
-                                <p>Chọn bệnh nhân hoặc nhập tình trạng để AI đề xuất phác đồ điều trị.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Device Section -->
-            <section id="device-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Kết nối máy phát thuốc</h2>
-                </div>
-                <div class="device-grid">
-                    <div class="widget">
-                        <h3><i class="fas fa-plug"></i> Arduino Mega 2560</h3>
-                        <div class="btn-row">
-                            <button class="btn btn-primary" id="connect-btn">Kết nối cổng USB</button>
-                            <button class="btn btn-secondary" id="sync-btn">Đồng bộ ngay</button>
-                            <button class="btn btn-secondary" id="check-btn">Kiểm tra máy</button>
-                            <button class="btn btn-secondary" id="disconnect-btn">Ngắt kết nối</button>
-                        </div>
-                        <pre id="serial-console" class="console">Chưa có dữ liệu.</pre>
-                    </div>
-                    <div class="widget">
-                        <h3><i class="fas fa-circle-info"></i> Cách hoạt động</h3>
-                        <ol class="how-to">
-                            <li>Nhập bệnh nhân (kèm Face ID đã học trên HuskyLens), gán thuốc vào ngăn servo 1-3 ở mục Loại thuốc, rồi tạo lịch uống.</li>
-                            <li>Cắm USB, bấm Kết nối. Mỗi lần bạn sửa dữ liệu, web tự đồng bộ xuống máy.</li>
-                            <li>Khi HuskyLens nhận ra mặt, máy tra lịch, xoay servo đúng ngăn và hiện tên thuốc lên màn hình.</li>
-                        </ol>
-                        <p class="hint">Cần Chrome hoặc Edge trên máy tính (Web Serial).</p>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Modals -->
-    <!-- Patient Modal -->
-    <div id="patient-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="patient-modal-title">Thêm Bệnh Nhân Mới</h3>
-                <span class="close-btn" onclick="closeModal('patient-modal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="patient-form">
-                    <input type="hidden" id="patient-id">
-                    <div class="form-group">
-                        <label>Ảnh khuôn mặt</label>
-                        <div class="photo-row">
-                            <img id="photo-preview" class="ph big" alt="Ảnh bệnh nhân">
-                            <div class="btn-col">
-                                <button type="button" class="btn btn-secondary btn-sm" id="photo-pick">Chọn ảnh từ máy</button>
-                                <button type="button" class="btn btn-secondary btn-sm" id="photo-cam">Chụp bằng webcam</button>
-                                <button type="button" class="btn btn-danger btn-sm" id="photo-clear">Xóa ảnh</button>
-                            </div>
-                        </div>
-                        <div id="cam-box" class="hidden">
-                            <video id="cam-video" autoplay playsinline muted></video>
-                            <button type="button" class="btn btn-primary btn-sm" id="photo-snap">Chụp ảnh</button>
-                        </div>
-                        <input type="file" id="photo-file" accept="image/*" class="hidden">
-                    </div>
-                    <div class="form-group">
-                        <label>Tên Bệnh Nhân *</label>
-                        <input type="text" id="patient-name" class="form-control" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Tuổi *</label>
-                            <input type="number" id="patient-age" class="form-control" required min="0" max="150">
-                        </div>
-                        <div class="form-group half">
-                            <label>Giới Tính *</label>
-                            <select id="patient-gender" class="form-control" required>
-                                <option value="Nam">Nam</option>
-                                <option value="Nữ">Nữ</option>
-                                <option value="Khác">Khác</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Số Điện Thoại</label>
-                            <input type="text" id="patient-phone" class="form-control">
-                        </div>
-                        <div class="form-group half">
-                            <label>Face ID (HuskyLens) *</label>
-                            <select id="patient-face" class="form-control" required></select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Tình Trạng Bệnh / Tiền Sử</label>
-                        <textarea id="patient-conditions" class="form-control" rows="3"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal('patient-modal')">Hủy</button>
-                        <button type="submit" class="btn btn-primary">Lưu Bệnh Nhân</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Schedule Modal -->
-    <div id="schedule-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Thêm Lịch Uống Thuốc</h3>
-                <span class="close-btn" onclick="closeModal('schedule-modal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="schedule-form">
-                    <div class="form-group">
-                        <label>Bệnh Nhân *</label>
-                        <select id="schedule-patient" class="form-control" required>
-                            <!-- Populated by JS -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Thuốc *</label>
-                        <select id="schedule-medication" class="form-control" required>
-                            <!-- Populated by JS -->
-                        </select>
-                        <small id="schedule-slot-hint" class="hint"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Liều Lượng *</label>
-                        <input type="text" id="schedule-dosage" class="form-control" placeholder="VD: 1 viên, 10ml..." required>
-                    </div>
-                    <div class="form-group">
-                        <label>Tần Suất Trong Ngày *</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="freq-morning" value="Sáng"> Sáng</label>
-                            <label><input type="checkbox" id="freq-noon" value="Trưa"> Trưa</label>
-                            <label><input type="checkbox" id="freq-evening" value="Chiều"> Chiều</label>
-                            <label><input type="checkbox" id="freq-night" value="Tối"> Tối</label>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Ngày Bắt Đầu *</label>
-                            <input type="date" id="schedule-start" class="form-control" required>
-                        </div>
-                        <div class="form-group half">
-                            <label>Ngày Kết Thúc</label>
-                            <input type="date" id="schedule-end" class="form-control">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal('schedule-modal')">Hủy</button>
-                        <button type="submit" class="btn btn-primary">Lưu Lịch</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
-const KEY = 'medicare_data_v2', SESS = ['Sáng', 'Trưa', 'Chiều', 'Tối'];
-const FREQ = ['freq-morning', 'freq-noon', 'freq-evening', 'freq-night'];
-const SEED = [
-  ['Paracetamol 500mg', 'Giảm đau - hạ sốt', 'Giảm đau, hạ sốt. Cách nhau ít nhất 4-6 giờ.'],
-  ['Ibuprofen 400mg', 'Giảm đau - hạ sốt', 'Giảm đau, kháng viêm. Uống sau ăn.'],
-  ['Amlodipin 5mg', 'Huyết áp', 'Hạ huyết áp, uống mỗi ngày cùng một giờ.'],
-  ['Metformin 500mg', 'Tiểu đường', 'Kiểm soát đường huyết, uống trong bữa ăn.'],
-  ['Omeprazol 20mg', 'Dạ dày', 'Giảm tiết acid, uống trước ăn sáng.'],
-  ['Cetirizin 10mg', 'Dị ứng', 'Giảm ngứa, mề đay, viêm mũi dị ứng.'],
-  ['Amoxicillin 500mg', 'Kháng sinh', 'Chỉ dùng khi có chỉ định của bác sĩ.'],
-  ['Vitamin C 500mg', 'Vitamin', 'Bổ sung vitamin C.']
-].map((m, i) => ({ id: 'm' + i, name: m[0], type: m[1], desc: m[2], slot: 0 }));
-let db = JSON.parse(localStorage.getItem(KEY) || 'null') || { patients: [], medications: SEED, schedules: [], log: [], acts: [] };
-
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { alert('Bộ nhớ trình duyệt đã đầy. Hãy xóa bớt ảnh hoặc bệnh nhân cũ.'); } };
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const plain = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
-const ascii = (s, n) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').replace(/[^\x20-\x7e]/g, '').replace(/,/g, ' ').trim().slice(0, n) || '-';
-const localMs = () => Date.now() - new Date().getTimezoneOffset() * 6e4;
-const todayStr = () => new Date(localMs()).toISOString().slice(0, 10);
-const dayNum = () => Math.floor(localMs() / 864e5);
-const dateNum = s => s ? Math.floor(Date.parse(s + 'T00:00:00Z') / 864e5) : 0;
-const sessNow = () => { const h = new Date().getHours(); return h >= 5 && h < 11 ? 0 : h >= 11 && h < 14 ? 1 : h >= 14 && h < 18 ? 2 : 3; };
-const patient = id => db.patients.find(p => p.id === id);
-const med = id => db.medications.find(m => m.id === id);
-const isActive = s => s.start <= todayStr() && (!s.end || s.end >= todayStr());
-const act = t => { db.acts.push({ t: Date.now(), text: t }); db.acts = db.acts.slice(-30); };
-const fmtTime = t => new Date(t).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
-
-/* ---------- Điều hướng & modal ---------- */
-$$('.nav-links li').forEach(li => li.onclick = () => {
-  $$('.nav-links li').forEach(x => x.classList.toggle('active', x === li));
-  $$('.content-section').forEach(s => s.classList.toggle('active', s.id === li.dataset.target));
-});
-function openModal(id) {
-  if (id === 'patient-modal' && !$('#patient-id').value) resetPatientForm();
-  if (id === 'schedule-modal') {
-    if (!db.patients.length) return alert('Hãy thêm bệnh nhân trước.');
-    $('#schedule-start').value = todayStr(); $('#schedule-end').value = ''; $('#schedule-dosage').value = '';
-    FREQ.forEach(f => $('#' + f).checked = false); slotHint();
-  }
-  $('#' + id).classList.add('show');
-}
-function closeModal(id) { $('#' + id).classList.remove('show'); if (id === 'patient-modal') { $('#patient-id').value = ''; stopCam(); } }
-
-/* ---------- Bệnh nhân ---------- */
-$('#patient-face').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8].map(i => `<option value="${i}">ID ${i}</option>`).join('');
-function resetPatientForm() {
-  $('#patient-form').reset(); $('#patient-id').value = ''; setPhoto('');
-  $('#patient-modal-title').textContent = 'Thêm Bệnh Nhân Mới';
-  const used = db.patients.map(p => p.faceId); const free = [1, 2, 3, 4, 5, 6, 7, 8].find(i => !used.includes(i));
-  $('#patient-face').value = free || 1;
-}
-function editPatient(id) {
-  const p = patient(id); resetPatientForm();
-  $('#patient-id').value = id; $('#patient-modal-title').textContent = 'Sửa Bệnh Nhân';
-  $('#patient-name').value = p.name; $('#patient-age').value = p.age; $('#patient-gender').value = p.gender;
-  $('#patient-phone').value = p.phone; $('#patient-face').value = p.faceId; $('#patient-conditions').value = p.cond; setPhoto(p.photo || '');
-  openModal('patient-modal');
-}
-function deletePatient(id) {
-  if (!confirm('Xóa bệnh nhân này và các lịch uống của họ?')) return;
-  db.patients = db.patients.filter(p => p.id !== id); db.schedules = db.schedules.filter(s => s.pid !== id);
-  touch();
-}
-$('#patient-form').onsubmit = e => {
-  e.preventDefault();
-  const id = $('#patient-id').value, face = +$('#patient-face').value;
-  if (db.patients.some(p => p.faceId === face && p.id !== id)) return alert('Face ID ' + face + ' đã gán cho bệnh nhân khác.');
-  const p = { id: id || 'p' + Date.now(), name: $('#patient-name').value.trim(), age: +$('#patient-age').value, gender: $('#patient-gender').value,
-    phone: $('#patient-phone').value, faceId: face, cond: $('#patient-conditions').value, photo: photoData };
-  const i = db.patients.findIndex(x => x.id === id);
-  if (i >= 0) db.patients[i] = p; else { db.patients.push(p); act('Thêm bệnh nhân ' + p.name); }
-  closeModal('patient-modal'); touch();
-};
-$('#search-patient').oninput = renderPatients;
-function renderPatients() {
-  const q = plain($('#search-patient').value);
-  $('#patients-table-body').innerHTML = db.patients.filter(p => plain(p.name).includes(q)).map(p => `<tr>
-    <td><span class="face">${p.faceId}</span></td><td><div class="who">${avatar(p)}${esc(p.name)}</div></td><td>${p.age}</td><td>${esc(p.gender)}</td><td>${esc(p.phone)}</td><td>${esc(p.cond)}</td>
-    <td><button class="btn btn-secondary btn-sm" onclick="editPatient('${p.id}')">Sửa</button> <button class="btn btn-danger btn-sm" onclick="deletePatient('${p.id}')">Xóa</button></td></tr>`).join('')
-    || '<tr><td colspan="7" class="sub">Chưa có bệnh nhân. Bấm Thêm Bệnh Nhân.</td></tr>';
-}
-
-/* ---------- Thuốc & ngăn servo ---------- */
-$('#search-medication').oninput = renderMeds; $('#filter-medication-type').onchange = renderMeds;
-function renderMeds() {
-  const q = plain($('#search-medication').value), t = $('#filter-medication-type').value;
-  $('#medications-grid').innerHTML = db.medications.filter(m => plain(m.name).includes(q) && (t === 'all' || m.type === t)).map(m => `
-    <div class="med-card"><h4>${esc(m.name)}</h4><span class="tag">${esc(m.type)}</span><p class="sub">${esc(m.desc)}</p>
-    <label>Ngăn servo của máy<select class="form-control" onchange="setSlot('${m.id}',+this.value)">
-      <option value="0"${!m.slot ? ' selected' : ''}>Chưa gán</option>
-      ${[1, 2, 3, 4, 5, 6].map(n => `<option value="${n}"${m.slot === n ? ' selected' : ''}>Ngăn ${n}</option>`).join('')}</select></label>
-    ${m.slot ? `<button class="btn btn-secondary btn-sm" onclick="send('TEST,${m.slot}')">Thử xoay servo ${m.slot}</button>` : ''}</div>`).join('');
-}
-function setSlot(id, n) {
-  if (n) db.medications.forEach(m => { if (m.slot === n) m.slot = 0; });
-  med(id).slot = n; touch();
-}
-
-/* ---------- Lịch uống thuốc ---------- */
-$('#schedule-medication').onchange = slotHint;
-function slotHint() {
-  const m = med($('#schedule-medication').value);
-  $('#schedule-slot-hint').textContent = !m ? '' : m.slot ? `Máy sẽ xoay servo ngăn ${m.slot}.` : 'Thuốc này chưa gán ngăn servo. Vào mục Loại thuốc để gán.';
-}
-$('#schedule-form').onsubmit = e => {
-  e.preventDefault();
-  const m = med($('#schedule-medication').value), sess = FREQ.map(f => $('#' + f).checked);
-  if (!m.slot) return alert('Hãy gán ngăn servo cho thuốc này ở mục Loại thuốc trước.');
-  if (!sess.some(Boolean)) return alert('Chọn ít nhất một buổi uống.');
-  db.schedules.push({ id: 's' + Date.now(), pid: $('#schedule-patient').value, mid: m.id, dose: $('#schedule-dosage').value.trim(), sess, start: $('#schedule-start').value, end: $('#schedule-end').value });
-  act(`Thêm lịch ${m.name} cho ${patient($('#schedule-patient').value).name}`);
-  closeModal('schedule-modal'); touch();
-};
-function deleteSchedule(id) { db.schedules = db.schedules.filter(s => s.id !== id); touch(); }
-$('#schedule-patient-filter').onchange = renderSchedules;
-function renderSchedules() {
-  const f = $('#schedule-patient-filter').value;
-  $('#schedule-timeline').innerHTML = db.schedules.filter(s => f === 'all' || s.pid === f).map(s => {
-    const p = patient(s.pid), m = med(s.mid);
-    return `<div class="tl-item"><div><b>${esc(p ? p.name : '(đã xóa)')}</b> · ${esc(m ? m.name : '')}
-      <div class="sub">${esc(s.dose)} · ${s.sess.map((o, i) => o ? SESS[i] : '').filter(Boolean).join(', ')} · ${s.start} → ${s.end || 'không hạn'} · Ngăn ${m ? m.slot : '?'}</div></div>
-      <button class="btn btn-danger btn-sm" onclick="deleteSchedule('${s.id}')">Xóa</button></div>`;
-  }).join('') || '<p class="sub">Chưa có lịch uống thuốc.</p>';
-}
-
-/* ---------- Tổng quan ---------- */
-function renderDash() {
-  const day = todayStr();
-  const taken = new Set(db.log.filter(l => new Date(l.t - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10) === day).map(l => `${l.face}-${l.slot}-${l.sess}`));
-  const rows = []; let due = 0;
-  db.schedules.filter(isActive).forEach(s => {
-    const p = patient(s.pid), m = med(s.mid); if (!p || !m) return;
-    s.sess.forEach((on, i) => {
-      if (!on) return; const done = taken.has(`${p.faceId}-${m.slot}-${i}`); if (!done) due++;
-      rows.push({ i, h: `<div class="today-item"><div class="who">${avatar(p)}<div><b>${esc(p.name)}</b><div class="sub">${esc(m.name)} · ${esc(s.dose)}</div></div></div>
-        <span class="tag ${done ? 'done' : i === sessNow() ? 'now' : ''}">${SESS[i]}${done ? ' - đã nhả' : ''}</span></div>` });
-    });
-  });
-  rows.sort((a, b) => a.i - b.i);
-  $('#stat-total-patients').textContent = db.patients.length;
-  $('#stat-active-prescriptions').textContent = db.schedules.filter(isActive).length;
-  $('#stat-due-today').textContent = due;
-  $('#today-schedules-list').innerHTML = rows.map(r => r.h).join('') || '<p class="sub">Hôm nay chưa có lịch nào.</p>';
-  $('#recent-activities-list').innerHTML = db.acts.slice(-8).reverse().map(a => `<li><span>${esc(a.text)}</span><span class="sub">${fmtTime(a.t)}</span></li>`).join('') || '<li class="sub">Chưa có hoạt động.</li>';
-}
-
-/* ---------- Đề xuất AI (gợi ý theo từ khóa, chỉ để tham khảo) ---------- */
-const RULES = [
-  [['sot', 'dau dau', 'dau nhuc', 'cam cum'], 'Paracetamol 500mg'], [['dau khop', 'viem', 'dau rang'], 'Ibuprofen 400mg'],
-  [['huyet ap', 'tang huyet'], 'Amlodipin 5mg'], [['tieu duong', 'duong huyet'], 'Metformin 500mg'],
-  [['da day', 'trao nguoc', 'o chua'], 'Omeprazol 20mg'], [['di ung', 'ngua', 'me day', 'viem mui'], 'Cetirizin 10mg'],
-  [['nhiem khuan', 'viem hong', 'viem phoi'], 'Amoxicillin 500mg'], [['met moi', 'thieu vitamin', 'de cam'], 'Vitamin C 500mg']];
-function generateAISuggestions() {
-  const p = patient($('#ai-patient-select').value);
-  const text = plain(($('#ai-conditions-input').value || '') + ' ' + (p ? p.cond : ''));
-  if (!text.trim()) return alert('Chọn bệnh nhân hoặc nhập tình trạng bệnh.');
-  $('#ai-typing-indicator').classList.remove('hidden'); $('#ai-results').innerHTML = '';
-  setTimeout(() => {
-    $('#ai-typing-indicator').classList.add('hidden');
-    const hits = RULES.filter(r => r[0].some(k => text.includes(k))).map(r => med(db.medications.find(m => m.name === r[1])?.id)).filter(Boolean);
-    $('#ai-results').innerHTML = (hits.map(m => `<div class="ai-card"><b>${esc(m.name)}</b> <span class="tag">${esc(m.type)}</span><p class="sub">${esc(m.desc)}</p></div>`).join('')
-      || '<div class="empty-state"><i class="fas fa-robot"></i><p>Chưa tìm thấy thuốc phù hợp trong danh mục.</p></div>')
-      + '<p class="sub">Gợi ý chỉ mang tính tham khảo. Bác sĩ cần xác nhận trước khi kê lịch uống.</p>';
-  }, 700);
-}
-
-/* ---------- Render chung ---------- */
-function fillSelects() {
-  const keep = (sel, html) => { const v = sel.value; sel.innerHTML = html; if ([...sel.options].some(o => o.value === v)) sel.value = v; };
-  const pOpts = db.patients.map(p => `<option value="${p.id}">${esc(p.name)} (ID ${p.faceId})</option>`).join('');
-  keep($('#schedule-patient'), pOpts);
-  keep($('#schedule-patient-filter'), '<option value="all">Tất cả bệnh nhân</option>' + pOpts);
-  keep($('#ai-patient-select'), '<option value="">-- Chọn bệnh nhân --</option>' + pOpts);
-  keep($('#schedule-medication'), db.medications.map(m => `<option value="${m.id}">${esc(m.name)} ${m.slot ? '(Ngăn ' + m.slot + ')' : '(chưa gán ngăn)'}</option>`).join(''));
-  keep($('#filter-medication-type'), '<option value="all">Tất cả loại thuốc</option>' + [...new Set(db.medications.map(m => m.type))].map(t => `<option>${esc(t)}</option>`).join(''));
-}
-function render() { fillSelects(); renderDash(); renderPatients(); renderMeds(); renderSchedules(); }
-function touch() { save(); render(); autoSync(); }
-
-/* ---------- Kết nối Arduino (Web Serial) ---------- */
-let port, writer, reader, ack = null, syncTimer = null, syncing = false, initDone = false; const enc = new TextEncoder();
-function con(t) { const c = $('#serial-console'); if (c.dataset.i !== '1') { c.textContent = ''; c.dataset.i = '1'; } c.textContent += t + '\n'; c.scrollTop = c.scrollHeight; }
-function setConn(ok) { $('#conn-badge').classList.toggle('off', !ok); $('#conn-text').textContent = ok ? 'Đã kết nối máy' : 'Chưa kết nối máy'; }
-function send(line) {
-  return new Promise(res => {
-    if (!writer) { con('Chưa kết nối Arduino.'); return res(false); }
-    const t = setTimeout(() => { ack = null; res(false); }, 3000);
-    ack = v => { clearTimeout(t); res(v); };
-    writer.write(enc.encode(line + '\n')); con('> ' + line);
-  });
-}
-function onLine(l) {
-  if (!l) return;
-  if (l === 'OK' && ack) { const a = ack; ack = null; a(true); return; }
-  con('< ' + l);
-  const p = l.split(',');
-  if (p[0] === 'READY' && initDone) {
-    toast('<div><b>Máy vừa khởi động lại</b><br><span class="sub">Đang đồng bộ lại giờ và lịch. Nếu lỗi này lặp lại mỗi lần servo quay thì nguồn đang yếu.</span></div>', 'warn');
-    setTimeout(sync, 1500);
-  }
-  if (p[0] === 'STATUS') {
-    const clock = p[1] === '1', husky = p[2] === '1', n = +p[3], sn = SESS[Math.log2(+p[5])] || '';
-    toast(`<div><b>Trạng thái máy</b><br><span class="sub">Giờ: ${clock ? 'đã đồng bộ' : 'CHƯA có'} · HuskyLens: ${husky ? 'OK' : 'LỖI'}<br>Lịch trong máy: ${n}${clock ? ' · Buổi: ' + sn : ''}</span></div>`, (!clock || !husky || n === 0) ? 'warn' : 'ok');
-  }
-  if (p[0] === 'HUSKY' && huskyState !== p[1]) {
-    huskyState = p[1];
-    toast(p[1] === 'OK' ? '<div><b>HuskyLens đã kết nối</b></div>'
-      : '<div><b>Không kết nối được HuskyLens</b><br><span class="sub">Kiểm tra dây SDA/SCL (chân 20, 21) và đặt Protocol Type = I2C</span></div>', p[1] === 'OK' ? 'ok' : 'bad');
-  }
-  if (p[0] === 'UNLEARNED') toast('<div><b>Thấy khuôn mặt nhưng chưa học</b><br><span class="sub">Trên HuskyLens: hướng camera vào mặt rồi nhấn nút Learn để gán ID</span></div>', 'warn');
-  if (p[0] === 'FACE') {
-    const pt = db.patients.find(x => x.faceId === +p[1]);
-    toast(pt ? `${avatar(pt)}<div><b>Đã nhận diện: ${esc(pt.name)}</b><br><span class="sub">Face ID ${p[1]}</span></div>`
-             : `<div><b>Máy nhận ra Face ID ${p[1]}</b><br><span class="sub">Chưa gán cho bệnh nhân nào trên web</span></div>`, pt ? 'info' : 'warn');
-    act(pt ? `Nhận diện khuôn mặt ${pt.name}` : `Nhận diện Face ID ${p[1]} (chưa gán bệnh nhân)`); save(); render();
-  }
-  if (p[0] === 'RESULT') {
-    const pt = db.patients.find(x => x.faceId === +p[1]), nm = pt ? pt.name : 'Face ID ' + p[1], sn = SESS[Math.log2(+p[3])] || '';
-    const M = {
-      OK: ['ok', `${nm}: máy đã nhả thuốc.`],
-      TAKEN: ['warn', `${nm} đã uống buổi ${sn} rồi nên máy không nhả thêm.`],
-      NOSESSION: ['warn', `${nm} không có lịch uống vào buổi ${sn}. Kiểm tra buổi uống trong Lịch uống thuốc.`],
-      NODATE: ['warn', `Lịch của ${nm} chưa đến ngày bắt đầu hoặc đã hết hạn.`],
-      UNKNOWN: ['bad', `Máy chưa có lịch nào cho Face ID ${p[1]}. Kiểm tra Face ID của bệnh nhân rồi bấm Đồng bộ ngay.`],
-      NOCLOCK: ['bad', 'Máy chưa có giờ nên không nhả thuốc. Bấm Đồng bộ ngay.']
-    }[p[2]];
-    if (M) toast(`<div>${esc(M[1])}</div>`, M[0]);
-  }
-  if (p[0] === 'LOG') {
-    const face = +p[1], slot = +p[2], sess = Math.log2(+p[3]);
-    const pt = db.patients.find(x => x.faceId === face), m = db.medications.find(x => x.slot === slot);
-    db.log.push({ t: Date.now(), face, slot, sess }); db.log = db.log.slice(-300);
-    act(`Máy nhả ${m ? m.name : 'ngăn ' + slot} cho ${pt ? pt.name : 'Face ID ' + face}`); save(); render();
-  }
-}
-async function readLoop() {
-  const dec = new TextDecoderStream(); port.readable.pipeTo(dec.writable).catch(() => {});
-  reader = dec.readable.getReader(); let buf = '';
-  try { for (;;) { const { value, done } = await reader.read(); if (done) break; buf += value; let i;
-    while ((i = buf.indexOf('\n')) >= 0) { onLine(buf.slice(0, i).trim()); buf = buf.slice(i + 1); } } } catch (e) {}
-  writer = null; initDone = false; setConn(false);
-}
-async function connect() {
-  if (!('serial' in navigator)) return alert('Trình duyệt chưa hỗ trợ Web Serial. Hãy dùng Chrome hoặc Edge trên máy tính.');
-  try {
-    port = await navigator.serial.requestPort(); await port.open({ baudRate: 115200 });
-    writer = port.writable.getWriter(); setConn(true); readLoop(); con('Đang chờ Arduino khởi động...');
-    for (let i = 0; i < 15; i++) if (await send('PING')) break;
-    await sync(); initDone = true;
-  } catch (e) { con('Lỗi: ' + e.message); }
-}
-async function disconnect() {
-  try { await reader?.cancel(); writer?.releaseLock(); await port?.close(); } catch (e) {}
-  writer = null; initDone = false; setConn(false); con('Đã ngắt kết nối.');
-}
-async function sync() {
-  if (!writer || syncing) return; syncing = true;
-  for (let i = 0; i < 5; i++) if (await send('PING')) break;
-  const n = new Date(); let k = 0, skipped = 0;
-  await send(`TIME,${dayNum()},${n.getHours()},${n.getMinutes()},${n.getSeconds()}`);
-  await send('CLR');
-  for (const s of db.schedules) {
-    const p = patient(s.pid), m = med(s.mid);
-    if (!p || !m || !m.slot) { skipped++; continue; }
-    if (k >= 20) { con('Máy chứa tối đa 20 lịch, phần còn lại bị bỏ qua.'); break; }
-    const mask = s.sess.reduce((a, v, i) => a | (v ? 1 << i : 0), 0);
-    await send(['ADD', p.faceId, m.slot, mask, dateNum(s.start), dateNum(s.end), ascii(p.name, 15), ascii(m.name, 19), ascii(s.dose, 11)].join(',')); k++;
-  }
-  await send('SAVE'); await send('STATUS'); con(`Đồng bộ xong ${k} lịch${skipped ? `, bỏ qua ${skipped} lịch thiếu ngăn servo` : ''}.`); syncing = false;
-}
-function autoSync() { if (!writer) return; clearTimeout(syncTimer); syncTimer = setTimeout(sync, 800); }
-$('#connect-btn').onclick = connect; $('#sync-btn').onclick = sync; $('#check-btn').onclick = () => send('STATUS'); $('#disconnect-btn').onclick = disconnect;
-
-/* ---------- Thông báo ---------- */
-let huskyState = '';
-function toast(html, kind) {
-  let box = $('#toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; document.body.appendChild(box); }
-  const t = document.createElement('div'); t.className = 'toast ' + (kind || 'info'); t.innerHTML = html; box.appendChild(t);
-  setTimeout(() => t.remove(), 7000);
-}
-
-/* ---------- Ảnh khuôn mặt bệnh nhân ---------- */
-const NOPHOTO = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#dfe9ec"/><circle cx="48" cy="38" r="17" fill="#9db3ba"/><path d="M14 96c2-22 16-32 34-32s32 10 34 32z" fill="#9db3ba"/></svg>');
-let photoData = '', camStream = null;
-const avatar = p => `<img class="ph" src="${p.photo || NOPHOTO}" alt="">`;
-function setPhoto(d) { photoData = d; $('#photo-preview').src = d || NOPHOTO; }
-function setPhotoFrom(src, w, h) {                       // cắt vuông giữa ảnh, thu về 200x200 để nhẹ bộ nhớ
-  const c = document.createElement('canvas'); c.width = c.height = 200;
-  const m = Math.min(w, h); c.getContext('2d').drawImage(src, (w - m) / 2, (h - m) / 2, m, m, 0, 0, 200, 200);
-  setPhoto(c.toDataURL('image/jpeg', 0.8));
-}
-function stopCam() { camStream?.getTracks().forEach(t => t.stop()); camStream = null; $('#cam-box').classList.add('hidden'); }
-$('#photo-pick').onclick = () => $('#photo-file').click();
-$('#photo-file').onchange = e => {
-  const f = e.target.files[0]; if (!f) return; const img = new Image();
-  img.onload = () => { setPhotoFrom(img, img.naturalWidth, img.naturalHeight); URL.revokeObjectURL(img.src); };
-  img.src = URL.createObjectURL(f); e.target.value = '';
-};
-$('#photo-cam').onclick = async () => {
-  try { camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-    $('#cam-video').srcObject = camStream; $('#cam-box').classList.remove('hidden'); }
-  catch (e) { alert('Không mở được webcam: ' + e.message); }
-};
-$('#photo-snap').onclick = () => { const v = $('#cam-video'); setPhotoFrom(v, v.videoWidth, v.videoHeight); stopCam(); };
-$('#photo-clear').onclick = () => setPhoto('');
-render();
-
+<header><div class="w">
+<div class="hd"><img src="data:image/jpeg;base64,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" alt="Logo HCM-UTE"><div><h1>MediCare – Hệ thống phát thuốc thông minh</h1><p>Nhận diện khuôn mặt • Quản lý lịch uống thuốc • Nhả thuốc tự động</p></div></div>
+<nav><a href="#m3d">Mô hình 3D</a><a href="#info">Thông tin dự án</a><a href="#ct">Cấu tạo</a><a href="#hd">Hướng dẫn sử dụng</a><a href="#team">Thành viên</a></nav>
+</div></header>
+<main class="w">
+<section id="m3d">
+<h2>Mô hình 3D sản phẩm</h2>
+<p class="sub">Bấm vào sản phẩm để tách các bộ phận, kéo để xoay, cuộn để phóng to. Bấm vào từng bộ phận để xem chức năng.</p>
+<div class="v">
+<div class="cvb"><canvas id="cv"></canvas><div class="hint">Kéo: xoay · Cuộn/chụm: thu phóng · Bấm: tách / chọn</div></div>
+<div class="side">
+<div class="card"><h3 id="pn">MediCare</h3><div id="pd">Máy phát thuốc gồm hai hộp xếp chồng: hộp trên chứa 6 ngăn thuốc, camera, LCD và khu điện tử; hộp dưới có khay nhận thuốc. Bấm vào máy để tách thành 12 bộ phận.</div></div>
+<div class="btns"><button id="bx">Tách bộ phận</button><button id="br" class="on">Tự xoay</button></div>
+<div class="card"><h3>Các bộ phận</h3><div id="pl"></div></div>
+</div></div>
+</section>
+<section id="info">
+<h2>Thông tin dự án</h2>
+<p class="sub">Nguyên mẫu học thuật của Trường Đại học Công nghệ Kỹ thuật TP.HCM (HCM-UTE).</p>
+<div class="g">
+<div class="card"><h3>Tổng quan</h3><p style="margin:0">MediCare giúp quản lý lịch uống thuốc: nhận diện khuôn mặt bằng HuskyLens K210, kiểm tra lịch rồi mở cửa ngăn tương ứng bằng servo để thuốc rơi xuống khay. Quản trị viên đăng ký người dùng, gán Face ID, ngăn thuốc và giờ uống qua trang web.</p></div>
+<div class="card"><h3>Thông số</h3><dl><dt>Người dùng</dt><dd>Tối đa 2</dd><dt>Ngăn thuốc</dt><dd>6 ngăn riêng</dd><dt>Cơ cấu chấp hành</dt><dd>6 × servo SG90</dd><dt>Điều khiển</dt><dd>Arduino Mega 2560</dd><dt>Kết nối</dt><dd>ESP8266 Wi‑Fi</dd><dt>Nhận diện</dt><dd>HuskyLens K210</dd><dt>Hiển thị</dt><dd>LCD1602 I2C, LED, còi</dd><dt>Cảm biến</dt><dd>DHT11 (nhiệt độ, độ ẩm)</dd><dt>Kích thước</dt><dd>≈ 40 × 40 cm</dd></dl></div>
+<div class="card"><h3>Nguyên lý hoạt động</h3><ol><li>Quản trị tạo hồ sơ, gán Face ID, ngăn thuốc và lịch uống.</li><li>Người dùng đứng trước camera HuskyLens.</li><li>Camera trả về ID, hệ thống so với danh sách đã đăng ký.</li><li>Kiểm tra đúng giờ, đúng người, đúng thuốc, đúng điều kiện.</li><li>LCD hiện tên khoảng 3 giây rồi “VUI LONG LAY THUOC”; servo mở cửa đáy ngăn.</li><li>LED và còi báo khoảng 10 giây; hệ thống ghi nhận để không nhả trùng.</li></ol></div>
+<div class="card"><h3>Chức năng chính</h3><ul><li>Đăng ký và quản lý người dùng, Face ID.</li><li>Đặt lịch theo người, ngăn thuốc và giờ uống.</li><li>Nhận diện trước khi kiểm tra điều kiện nhả thuốc.</li><li>Cảnh báo âm thanh khi khuôn mặt lạ.</li><li>Giám sát nhiệt độ (&gt; 30 °C) và độ ẩm (&gt; 75 %).</li></ul></div>
+<div class="card warn"><h3>Giới hạn và an toàn</h3><ul><li>Không nhận biết tên, thành phần hay liều lượng thuốc.</li><li>Không xác nhận người dùng đã uống thuốc.</li><li>Không thay thế người chăm sóc hay lời khuyên của bác sĩ.</li></ul><p style="margin:8px 0 0"><b>MediCare là nguyên mẫu học tập, không phải thiết bị y tế được chứng nhận.</b> Thuốc phải do người có trách nhiệm chuẩn bị và nạp đúng ngăn.</p></div>
+</div>
+</section>
+<section id="ct"><h2>Cấu tạo và nguyên lý</h2><p class="sub">Linh kiện, vật liệu, kiến trúc hệ thống và các tình huống vận hành.</p>
+<div class="g" style="grid-template-columns:1fr">
+<div class="card tw"><table><tr><th>Linh kiện</th><th>Vai trò trong hệ thống</th></tr><tr><td>Arduino Mega 2560</td><td>Bộ điều khiển trung tâm: xử lý dữ liệu, điều khiển servo, LCD, cảm biến, LED, còi.</td></tr><tr><td>ESP8266</td><td>Phát Wi-Fi, trao đổi dữ liệu giữa trang web quản lý và Arduino Mega.</td></tr><tr><td>HuskyLens K210</td><td>Camera AI nhận diện khuôn mặt, trả về Face ID.</td></tr><tr><td>6 × servo SG90</td><td>Mỗi servo mở một cửa ở đáy ngăn thuốc để thuốc rơi xuống khay.</td></tr><tr><td>LCD1602 I2C</td><td>Hiện tên người dùng, trạng thái nhận diện và hướng dẫn lấy thuốc.</td></tr><tr><td>DHT11</td><td>Đo nhiệt độ và độ ẩm trong hộp, cảnh báo khi vượt ngưỡng.</td></tr><tr><td>LED trắng, còi</td><td>Báo hiệu khi nhả thuốc và khi nhận diện sai hoặc khuôn mặt lạ.</td></tr><tr><td>Breadboard, dây nối</td><td>Nối tín hiệu giữa các linh kiện khi làm nguyên mẫu.</td></tr><tr><td>Nguồn 5V ngoài</td><td>Cấp riêng cho 6 servo; mass chung với Arduino.</td></tr></table></div>
+<div class="g"><div class="card"><h3>Vật liệu và cơ khí</h3><ul><li>Bìa carton: thân hộp, vách ngăn, tấm mặt.</li><li>Xốp: tạo hình, ngăn ngăn thuốc, cố định linh kiện.</li><li>Keo dán các tấm và chi tiết cơ khí.</li><li>Hộp trên: 6 ngăn nằm ngang, camera, LCD, khu điện tử.</li><li>Mặt dốc nghiêng ở đáy hộp trên và khay nhận thuốc ở hộp dưới.</li></ul></div>
+<div class="card"><h3>Kiến trúc hệ thống</h3><ul><li>Giao diện: trang web nhập người dùng, Face ID, ngăn thuốc, lịch.</li><li>Truyền thông: ESP8266 (Wi-Fi).</li><li>Xử lý: Arduino Mega 2560.</li><li>Nhận diện: HuskyLens K210.</li><li>Chấp hành: 6 servo SG90.</li><li>Hiển thị và giám sát: LCD, DHT11, LED, còi.</li></ul><p style="margin:8px 0 0;color:var(--mu);font-size:14px">Luồng dữ liệu: Trang web ↔ ESP8266 ↔ Arduino Mega ↔ HuskyLens, servo, LCD, DHT11, LED, còi.</p></div></div>
+<div class="card tw"><table><tr><th>Tình huống</th><th>Phản hồi của hệ thống</th></tr><tr><td>Đúng người, đúng giờ</td><td>Mở servo của ngăn đã gán, thuốc rơi xuống khay.</td></tr><tr><td>Đúng người nhưng chưa đến giờ</td><td>Không nhả thuốc, LCD báo ngoài khung giờ.</td></tr><tr><td>Khuôn mặt lạ hoặc chưa đăng ký</td><td>Không nhả thuốc, còi cảnh báo.</td></tr><tr><td>Lịch đã được cấp</td><td>Không nhả trùng trong cùng khoảng giờ.</td></tr><tr><td>Nhiệt độ trên 30 °C</td><td>Cảnh báo môi trường.</td></tr><tr><td>Độ ẩm trên 75 %</td><td>Cảnh báo môi trường.</td></tr></table></div>
+<div class="card tw"><table><tr><th>Vấn đề thường gặp</th><th>MediCare hỗ trợ như thế nào</th></tr><tr><td>Quên giờ uống thuốc</td><td>Lịch được cấu hình sẵn, đến giờ máy mới nhả thuốc.</td></tr><tr><td>Nhầm ngăn thuốc</td><td>Thuốc xếp theo ngăn, gắn với lịch của từng người.</td></tr><tr><td>Người không đăng ký dùng máy</td><td>Camera kiểm tra Face ID trước khi xét lịch.</td></tr><tr><td>Môi trường bảo quản</td><td>DHT11 theo dõi nhiệt độ, độ ẩm.</td></tr></table></div>
+</div></section>
+<section id="hd"><h2>Hướng dẫn sử dụng</h2><p class="sub">Cách dùng thiết bị và trang web quản lý.</p>
+<div class="g"><div class="card"><h3>Sử dụng trang web quản lý</h3><ol><li>Cấp nguồn cho máy, nối laptop hoặc điện thoại vào Wi-Fi <b>MediCare-Setup</b> (mật khẩu mặc định <b>SmartMed2026</b>).</li><li>Mở trình duyệt, vào <b>http://192.168.4.1</b>.</li><li>Mục <b>Kết nối máy phát thuốc</b>: bấm <b>Kết nối Wi-Fi (ESP8266)</b>. Có thể dùng cáp USB thay Wi-Fi.</li><li>Mục <b>Bệnh nhân</b>: thêm họ tên, tuổi và <b>Face ID</b> (phải trùng ID đã học trên HuskyLens).</li><li>Mục <b>Thuốc</b>: tạo thuốc và gán vào ngăn từ 1 đến 6.</li><li>Mục <b>Lịch uống</b>: chọn bệnh nhân, thuốc, khoảng giờ, ngày bắt đầu, ngày kết thúc và liều.</li><li><b>Giữ trang web mở</b> trong lúc sử dụng: khi máy nhận ra mặt, web kiểm tra lịch rồi ra lệnh nhả thuốc.</li><li>Xem trạng thái, nhiệt độ, độ ẩm và nhật ký nhả thuốc ở <b>Tổng quan</b>.</li></ol></div>
+<div class="card"><h3>Sử dụng thiết bị</h3><ol><li>Người có trách nhiệm kiểm tra thuốc theo đơn, mở nắp hộp trên rồi nạp vào đúng ngăn.</li><li>Cài lịch trên trang web theo kế hoạch đã xác nhận.</li><li>Đến giờ, đứng trước camera ở mặt trước (chỗ ghi “Nhìn vào đây”).</li><li>Chờ LCD xác nhận: hiện tên khoảng 3 giây rồi “VUI LONG LAY THUOC”.</li><li>Lấy thuốc ở khay phía dưới. Giữ tay tránh xa cửa đáy và servo.</li><li>Nếu không nhận diện được, không nhả thuốc hoặc còi kêu bất thường, hãy báo quản trị viên, không tự tháo máy.</li></ol></div>
+<div class="card"><h3>Các khu vực trên trang web</h3><ul><li>Tổng quan: kết nối, số người dùng, lịch, trạng thái 6 ngăn, nhiệt độ, độ ẩm.</li><li>Bệnh nhân: tên, tuổi, Face ID.</li><li>Lịch uống: người, ngăn thuốc, khoảng giờ, liều.</li><li>Ngăn thuốc: 6 ngăn và lịch liên quan.</li><li>Môi trường: nhiệt độ, độ ẩm, cảnh báo.</li><li>Nhật ký: thời điểm, người dùng, ngăn đã mở.</li></ul></div>
+<div class="card"><h3>Hướng phát triển</h3><ul><li>Cải thiện giao diện đăng ký và đặt lịch.</li><li>Tăng độ tin cậy khi đồng bộ web với máy.</li><li>Cải thiện chuyển động cửa, giảm kẹt thuốc.</li><li>Gửi thông báo từ xa cho quản trị viên.</li><li>Cải thiện vỏ máy, khay, chống bụi và ẩm.</li><li>Thử nghiệm lặp lại để đánh giá độ bền và an toàn.</li></ul></div></div></section>
+<section id="team">
+<h2>Thành viên nhóm</h2>
+<p class="sub">Nhóm phát triển dự án MediCare – HCM-UTE.</p>
+<div class="card tw"><table><tr><th>STT</th><th>Họ và tên</th><th>MSSV</th><th>Lớp</th></tr>
+<tr><td>1</td><td>Nguyễn Đặng Duy An</td><td>26142002</td><td>26142FIE3</td></tr>
+<tr><td>2</td><td>Lê Minh Ý</td><td>26142142</td><td>26142FIE4</td></tr>
+<tr><td>3</td><td>Lê Hoàng Hải</td><td>26142032</td><td>26142FIE4</td></tr>
+<tr><td>4</td><td>Đặng Văn Khoa</td><td>26142059</td><td>26142FIE4</td></tr>
+<tr><td>5</td><td>Lê Anh Khôi</td><td>26142062</td><td>26142FIE4</td></tr>
+<tr><td>6</td><td>Nguyễn Nhật Minh</td><td>26142083</td><td>26142FIE3</td></tr>
+<tr><td>7</td><td>Võ Minh Thuận</td><td>26142125</td><td>26142FIE4</td></tr>
+<tr><td>8</td><td>Trương Trần Phương Linh</td><td>26142072</td><td>26142FIE3</td></tr></table></div>
+</section>
+</main>
+<footer>Trường Đại học Công nghệ Kỹ thuật TP.HCM (HCM-UTE) · Đồ án sinh viên MediCare</footer>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const T=THREE,cv=document.getElementById('cv'),$=id=>document.getElementById(id);
+const R=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true}),S=new T.Scene(),C=new T.PerspectiveCamera(40,1,.1,100);
+C.position.set(7,5.5,9);
+const O=new T.OrbitControls(C,cv);O.enableDamping=true;O.target.set(0,2,0);O.autoRotate=true;O.autoRotateSpeed=1.4;
+S.add(new T.HemisphereLight(0xffffff,0x8899aa,.95));
+const L=new T.DirectionalLight(0xffffff,.8);L.position.set(5,8,7);S.add(L);
+const gr=new T.GridHelper(12,24,0x8a96a6,0xb4bcc8);gr.material.transparent=true;gr.material.opacity=.35;S.add(gr);const parts=[];let ex=false,sel=null;
+const M=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.6},o));
+function part(id,name,desc,dir,build){const g=new T.Group();g.userData={id,name,desc,dir:new T.Vector3(...dir),cur:0};build(g);g.traverse(m=>{if(m.isMesh)m.userData.g=g});S.add(g);parts.push(g)}
+function box(g,w,h,d,c,x,y,z,o){const m=new T.Mesh(new T.BoxGeometry(w,h,d),M(c,o));m.position.set(x,y,z);g.add(m);return m}
+function edge(g,m){const e=new T.LineSegments(new T.EdgesGeometry(m.geometry),new T.LineBasicMaterial({color:0x1f6fba}));e.position.copy(m.position);e.raycast=()=>{};g.add(e)}
+const glass={transparent:true,opacity:.2,side:T.BackSide,depthWrite:false},X=[0,1,2,3,4,5].map(i=>-.8+i*.5);
+const RD=[],tex=(w,h,f)=>{const k=document.createElement('canvas');k.width=w;k.height=h;const t=new T.CanvasTexture(k),d=()=>{const c=k.getContext('2d');c.clearRect(0,0,w,h);f(c,w,h);t.needsUpdate=true};d();RD.push(d);return t};
+const plane=(g,w,h,t,x,y,z)=>{const p=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:t,transparent:true}));p.position.set(x,y,z);g.add(p);return p};
+const cyl=(g,r,h,c,x,y,z,ax,o)=>{const m=new T.Mesh(new T.CylinderGeometry(r,r,h,24),M(c,o));m.position.set(x,y,z);if(ax==='z')m.rotation.x=Math.PI/2;if(ax==='x')m.rotation.z=Math.PI/2;g.add(m);return m};
+part('shell','Vỏ hộp trên và nắp','Hộp bìa và xốp bọc trắng. Nắp trùm ra ngoài thân, vách đứng ngăn khu điện tử với dãy ngăn thuốc.',[0,3.2,0],g=>{edge(g,box(g,4,2.4,2.8,0xffffff,0,2.4,0,glass));box(g,4.16,.12,2.96,0xf4f6f9,0,3.66,0);box(g,4.1,.1,2.9,0xf4f6f9,0,1.25,0);box(g,.04,2.4,2.8,0xeef1f5,-1.05,2.4,0)});
+part('lower','Hộp dưới','Đế máy. Mặt trước có cửa mở ra khay nhận thuốc, ghi HCM-UTE và mũi tên chỉ hướng lấy thuốc.',[0,-1.8,0],g=>{edge(g,box(g,4,1.2,2.8,0xe8eef7,0,.6,0,glass));box(g,4.1,.08,2.9,0xf4f6f9,0,1.18,0);plane(g,4,1.2,tex(640,192,(x,w,h)=>{x.fillStyle='#e9edf2';x.fillRect(0,0,w,h);x.fillStyle='#232a33';x.fillRect(150,50,430,110);x.fillStyle='#0b3a6e';x.font='bold 40px "Be Vietnam Pro",sans-serif';x.textAlign='center';x.fillText('HCM-UTE',365,40);x.strokeStyle='#8a5a3b';x.lineWidth=14;x.beginPath();x.moveTo(40,60);x.lineTo(40,130);x.lineTo(100,130);x.moveTo(80,105);x.lineTo(105,130);x.lineTo(80,155);x.stroke()}),0,.6,1.41)});
+part('front','Mặt trước','Tấm mặt trước gắn camera, LCD, đèn và còi. In logo MediCare, dòng “Nhìn vào đây” và khẩu hiệu.',[0,.5,3],g=>{box(g,4,2.4,.08,0xffffff,0,2.4,1.44);plane(g,3.96,2.36,tex(800,480,(x,w,h)=>{x.fillStyle='#fff';x.fillRect(0,0,w,h);x.fillStyle='#c0392b';x.font='italic 26px "Be Vietnam Pro",sans-serif';x.fillText('NHÌN VÀO ĐÂY',30,50);x.strokeStyle='#c0392b';x.lineWidth=4;x.beginPath();x.moveTo(300,42);x.lineTo(470,42);x.moveTo(455,30);x.lineTo(470,42);x.lineTo(455,54);x.stroke();x.fillStyle='#e6b800';x.beginPath();x.moveTo(95,350);x.bezierCurveTo(30,300,50,240,95,275);x.bezierCurveTo(140,240,160,300,95,350);x.fill();x.fillStyle='#1f4fa8';x.font='bold 120px "Be Vietnam Pro",sans-serif';x.fillText('MediCare',160,335);x.fillStyle='#f3d6e4';x.fillRect(0,410,w,50);x.fillStyle='#b24a82';x.font='italic 28px "Be Vietnam Pro",sans-serif';x.fillText('Good days start with care',230,445)}),0,2.4,1.49)});
+part('cam','Camera HuskyLens K210','Module camera AI nhận diện khuôn mặt. Trả về Face ID qua giao tiếp I2C cho Arduino Mega.',[1.6,1.8,4],g=>{box(g,.6,.5,.02,0x333333,1.5,3.15,1.47);box(g,.55,.45,.06,0x121212,1.5,3.15,1.5);cyl(g,.13,.08,0x050505,1.5,3.2,1.55,'z',{metalness:.4});cyl(g,.07,.02,0x2a4a8a,1.5,3.2,1.6,'z');box(g,.08,.05,.03,0xcccccc,1.34,3.0,1.54);box(g,.08,.05,.03,0xcccccc,1.66,3.0,1.54)});
+part('lcd','LCD1602 I2C','Màn hình 16×2 ký tự có mạch I2C phía sau. Hiện tên người dùng rồi dòng “VUI LONG LAY THUOC”.',[-1,1.8,4],g=>{box(g,.5,.2,.03,0x143a8a,-.5,3.15,1.46);box(g,1.5,.52,.04,0x0d4d2b,-.5,3.15,1.49);box(g,1.25,.3,.03,0x9fc23a,-.5,3.15,1.52);plane(g,1.2,.28,tex(256,64,(x)=>{x.fillStyle='#233';x.font='bold 24px monospace';x.fillText('NGUYEN VAN A',10,26);x.fillText('VUI LONG LAY THUOC',10,54)}),-.5,3.15,1.545)});
+part('led','Đèn LED và còi','LED trắng và còi chip báo khoảng 10 giây khi nhả thuốc, đồng thời cảnh báo khi khuôn mặt lạ.',[.2,2.6,3.6],g=>{cyl(g,.07,.06,0xdddddd,.45,3.15,1.53,'z');const d=new T.Mesh(new T.SphereGeometry(.07,16,12),M(0xffffff,{emissive:0xffffaa,emissiveIntensity:.6}));d.position.set(.45,3.15,1.58);g.add(d);cyl(g,.14,.12,0x1a1a1a,.85,3.15,1.54,'z');cyl(g,.04,.02,0x444444,.85,3.15,1.61,'z')});
+const CX=[-.5,.45,1.4],CZ=[-.6,.6];
+part('cells','6 ngăn chứa thuốc','Sáu hộp chữ nhật xếp 3 cột × 2 hàng trên cùng một mặt phẳng song song với sàn, không chồng lên nhau. Miệng nạp thuốc mở phía trên (có khung viền trắng); đáy mỗi ngăn có cửa nhả thuốc.',[0,1.6,-1],g=>{CZ.forEach((z,j)=>CX.forEach((x,i)=>{const w=.85,d=1,h=.9,y=2.75,c=0xf6f8fb;box(g,.03,h,d,c,x-w/2,y,z);box(g,.03,h,d,c,x+w/2,y,z);box(g,w,h,.03,c,x,y,z-d/2);box(g,w,h,.03,c,x,y,z+d/2);box(g,w,.03,d,c,x,y-h/2,z);[1,-1].forEach(k=>{box(g,w+.14,.06,.07,0xffffff,x,y+h/2,z+k*d/2);box(g,.07,.06,d+.14,0xffffff,x+k*w/2,y+h/2,z)});cyl(g,.07,.24,[0xe0a82e,0xd9534f,0xf5f5f5][(i+j)%3],x,y-h/2+.1,z,'x')}))});
+part('servo','6 servo SG90 và cửa đáy','Mỗi servo SG90 nằm ngay dưới đáy ngăn thuốc, kéo cửa đáy nghiêng để thuốc rơi xuống khay nhận thuốc ở hộp dưới.',[0,-1.1,1.4],g=>{CZ.forEach(z=>CX.forEach(x=>{const y=2.05;box(g,.34,.22,.2,0x2b7bd6,x,y,z);box(g,.46,.03,.2,0x2b7bd6,x,y+.05,z);cyl(g,.04,.08,0xeeeeee,x+.1,y+.14,z);box(g,.3,.03,.05,0xffffff,x+.02,y+.17,z);[0xe67e22,0xc0392b,0x6e4b2a].forEach((c,i)=>box(g,.012,.012,.4,c,x-.1+i*.04,y-.1,z+.3));const r=box(g,.8,.03,.9,0xf0f0f0,x,2.27,z);r.rotation.z=.25}))});
+part('ramp','Mặt dốc trượt thuốc','Mặt phẳng nghiêng ở tầng dưới cùng của hộp trên. Hứng thuốc rơi từ cửa đáy các ngăn, cho trượt ngang ra khay nhận thuốc ở phía trước.',[0,-.6,1],g=>{const r=new T.Group();r.position.set(.45,1.175,.15);r.rotation.x=.464;g.add(r);box(r,2.9,.04,3.24,0xe9eef5,0,0,0);[-1,1].forEach(k=>box(r,.04,.14,3.24,0xf6f8fb,k*1.45,.07,0));box(r,2.9,.14,.04,0xf6f8fb,0,.07,-1.6);[[-.7,-.9],[.2,-.2],[.9,.5]].forEach(([x,z],i)=>cyl(r,.06,.2,[0xe0a82e,0xd9534f,0xf5f5f5][i],x,.08,z,'x'))});
+part('elec','Khu điện tử','Arduino Mega 2560 (cổng USB, giắc nguồn, hàng chân), ESP8266, breadboard, cảm biến DHT11 và nguồn 5V riêng cho servo.',[-3.6,.3,0],g=>{const bb=tex(128,256,(x,w,h)=>{x.fillStyle='#f2f2f2';x.fillRect(0,0,w,h);x.fillStyle='#bbb';for(let i=10;i<w-8;i+=8)for(let j=8;j<h;j+=8)x.fillRect(i,j,3,3);x.fillStyle='#d33';x.fillRect(4,0,3,h);x.fillStyle='#33d';x.fillRect(w-7,0,3,h)});box(g,.05,.9,.45,0xf2f2f2,-1.9,2.5,.6);plane(g,.45,.9,bb,-1.87,2.5,.6).rotation.y=Math.PI/2;box(g,.04,.95,.55,0x1b6ca8,-1.7,2.5,-.6);box(g,.08,.95,.04,0x151515,-1.68,2.5,-.38);box(g,.08,.95,.04,0x151515,-1.68,2.5,-.82);box(g,.1,.2,.18,0xc8c8c8,-1.66,3.0,-.8);box(g,.08,.14,.14,0x151515,-1.66,2.2,-.8);box(g,.06,.22,.22,0x111111,-1.68,2.5,-.6);box(g,.04,.32,.2,0x151a22,-1.4,3.1,.6);box(g,.06,.14,.14,0xb8bcc2,-1.38,3.15,.6);box(g,.2,.24,.2,0x4aa3e0,-1.4,1.7,.8);box(g,.5,.4,.35,0x1a1a1a,-1.5,1.5,-.9);box(g,.05,.12,.02,0xc0c0c0,-1.78,1.55,-.9)});
+part('wire','Dây dẫn','Dây tín hiệu nối Arduino Mega tới 6 servo, camera, LCD và cảm biến. Servo dùng nguồn 5V riêng, chung mass với Arduino.',[0,-.4,-3.8],g=>{[[0xe67e22,.35],[0xf1c40f,0],[0x8e5a2b,-.35]].forEach(([c,o])=>{const p=new T.CatmullRomCurve3([new T.Vector3(-1.7,2.4+o*.4,-.2),new T.Vector3(-1.2,2.1+o,.5),new T.Vector3(-.2,2.0,.4),new T.Vector3(.4,1.6+o*.3,.3)]);g.add(new T.Mesh(new T.TubeGeometry(p,24,.018,6),M(c)))})});
+part('tray','Khay nhận thuốc','Khay có thành bao quanh, nằm sau cửa mở của hộp dưới. Người dùng lấy thuốc rơi xuống từ ngăn đã mở.',[0,-1.4,2.6],g=>{box(g,3.2,.08,1,0xcfd8e3,0,.13,1.5);box(g,.06,.28,1,0xcfd8e3,-1.6,.27,1.5);box(g,.06,.28,1,0xcfd8e3,1.6,.27,1.5);box(g,3.2,.28,.06,0xcfd8e3,0,.27,2);box(g,3.2,.28,.06,0xcfd8e3,0,.27,1);[-.5,0,.6].forEach((a,i)=>cyl(g,.05,.16,[0xe0a82e,0xd9534f,0xf5f5f5][i],a,.24,1.5,'x'))});
+if(document.fonts)Promise.all(['400','700'].map(w=>document.fonts.load(w+' 40px "Be Vietnam Pro"'))).then(()=>RD.forEach(d=>d())).catch(()=>{});
+function show(g){sel=g;parts.forEach(p=>p.traverse(m=>{if(m.isMesh&&m.material.emissive){if(m.userData.e0===undefined)m.userData.e0=m.material.emissive.getHex();m.material.emissive.setHex(p===g?0x1f6fba:m.userData.e0)}}));
+$('pn').textContent=g?String(parts.indexOf(g)+1).padStart(2,'0')+' · '+g.userData.name:'MediCare';$('pd').textContent=g?g.userData.desc:'Bấm vào một bộ phận để xem chức năng.';
+[...$('pl').children].forEach(b=>b.classList.toggle('on',g&&b.dataset.id===g.userData.id))}
+function setEx(v){ex=v;$('bx').textContent=v?'Gộp lại':'Tách bộ phận';if(!v)show(null)}
+parts.forEach((g,i)=>{const b=document.createElement('button');b.textContent=String(i+1).padStart(2,'0')+'  '+g.userData.name;b.dataset.id=g.userData.id;b.onclick=()=>{setEx(true);show(g)};$('pl').appendChild(b)});
+$('bx').onclick=()=>setEx(!ex);
+$('br').onclick=()=>{O.autoRotate=!O.autoRotate;$('br').classList.toggle('on',O.autoRotate)};
+const rc=new T.Raycaster(),mv=new T.Vector2();let dn=null;
+cv.addEventListener('pointerdown',e=>dn=[e.clientX,e.clientY]);
+cv.addEventListener('pointerup',e=>{if(!dn||Math.hypot(e.clientX-dn[0],e.clientY-dn[1])>5)return;const r=cv.getBoundingClientRect();mv.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);rc.setFromCamera(mv,C);
+const h=rc.intersectObjects(parts,true).find(i=>i.object.userData.g);
+if(!ex){setEx(true);if(h)show(h.object.userData.g)}else show(h?h.object.userData.g:null)});
+function fit(){const w=cv.clientWidth,h=cv.clientHeight;R.setPixelRatio(Math.min(devicePixelRatio,2));R.setSize(w,h,false);C.aspect=w/h;C.updateProjectionMatrix()}
+new ResizeObserver(fit).observe(cv);fit();
+(function loop(){requestAnimationFrame(loop);parts.forEach(g=>{g.userData.cur+=((ex?1:0)-g.userData.cur)*.09;g.position.copy(g.userData.dir).multiplyScalar(g.userData.cur)});O.update();R.render(S,C)})();
 </script>
 </body>
 </html>
