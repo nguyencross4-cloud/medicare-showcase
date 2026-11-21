@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare - Quản lý lịch uống thuốc</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p:#0d7c8f;--pd:#0a5f6e;--bg:#f2f6f8;--card:#fff;--line:#e0e8ec;--tx:#1f2d33;--mu:#66787f;--ok:#2e9e6b;--warn:#e8a317;--bad:#d6453d}
+body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--tx)}
+.app-container{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--pd);color:#fff;flex-shrink:0}
+.sidebar-header{display:flex;align-items:center;gap:10px;padding:22px 20px}
+.logo-icon{font-size:26px;color:#ffd166}
+.nav-links{list-style:none}
+.nav-links li{padding:14px 20px;cursor:pointer;color:#cfe6ea;display:flex;gap:12px;align-items:center}
+.nav-links li:hover{background:rgba(255,255,255,.08)}
+.nav-links li.active{background:var(--p);color:#fff;border-left:4px solid #ffd166}
+.main-content{flex:1;padding:0 24px 40px;min-width:0}
+.top-header{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:12px;flex-wrap:wrap}
+.search-bar{background:#fff;border:1px solid var(--line);border-radius:22px;padding:8px 16px;display:flex;gap:8px;align-items:center;min-width:240px}
+.search-bar input{border:0;outline:0;flex:1;font:inherit}
+.user-profile{display:flex;align-items:center;gap:14px}
+.notification-icon{color:var(--mu)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center}
+.conn-badge{font-size:13px;padding:4px 12px;border-radius:14px;background:#e3f5ec;color:var(--ok)}
+.conn-badge.off{background:#fde8e6;color:var(--bad)}
+.conn-badge i{font-size:8px}
+.content-section{display:none}.content-section.active{display:block}
+.section-title{font-size:22px;margin-bottom:16px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+.section-header .section-title{margin:0}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:12px;padding:18px;display:flex;gap:16px;align-items:center;border:1px solid var(--line)}
+.stat-icon{width:48px;height:48px;border-radius:12px;background:#dff1f4;color:var(--p);display:grid;place-items:center;font-size:20px}
+.stat-info h3{font-size:14px;color:var(--mu);font-weight:400}
+.stat-info p{font-size:28px;font-weight:700}
+.dashboard-widgets,.device-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.widget{background:var(--card);border-radius:12px;padding:18px;border:1px solid var(--line)}
+.widget h3{font-size:16px;margin-bottom:12px;display:flex;gap:8px;align-items:center}
+.today-item,.recent-activities li,.tl-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}
+.recent-activities{list-style:none}
+.sub{font-size:13px;color:var(--mu)}
+.tag{font-size:12px;border-radius:12px;padding:2px 10px;background:#e4eef1;color:var(--pd);white-space:nowrap}
+.tag.done{background:var(--ok);color:#fff}.tag.now{background:var(--warn);color:#2b2100}
+.btn{border:0;border-radius:8px;padding:9px 16px;cursor:pointer;font:inherit}
+.btn-primary{background:var(--p);color:#fff}.btn-primary:hover{background:var(--pd)}
+.btn-secondary{background:#fff;color:var(--pd);border:1px solid var(--line)}
+.btn-danger{background:#fff;color:var(--bad);border:1px solid var(--line)}
+.btn-sm{padding:4px 10px;font-size:13px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.btn:focus-visible,.form-control:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+.table-controls,.schedule-filters{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.form-control{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font:inherit;background:#fff}
+.table-controls .form-control,.schedule-filters .form-control{max-width:280px}
+.table-container{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th,.data-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
+.data-table th{background:#e9f1f3;font-weight:500}
+.face{background:var(--pd);color:#fff;border-radius:6px;padding:2px 9px;font-weight:700}
+.medications-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.med-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px}
+.med-card h4{font-size:16px}
+.med-card label{font-size:13px;color:var(--mu);display:grid;gap:4px}
+.timeline-container{display:grid;gap:10px}
+.tl-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.ai-container{display:grid;grid-template-columns:1fr 1.3fr;gap:16px}
+.ai-input-area,.ai-result-area{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+.ai-card{border-left:4px solid var(--p);background:#f2f9fa;border-radius:8px;padding:12px;margin-bottom:10px}
+.empty-state{text-align:center;color:var(--mu);padding:30px 10px}
+.empty-state i{font-size:36px;margin-bottom:10px;display:block}
+#ai-typing-indicator{display:flex;align-items:center;gap:6px;color:var(--mu)}
+.typing-dot{width:8px;height:8px;border-radius:50%;background:var(--p);animation:b 1s infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{opacity:.25}}
+.hidden{display:none!important}
+.modal{display:none;position:fixed;inset:0;background:rgba(10,40,48,.55);z-index:50;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.modal-content{background:#fff;border-radius:14px;width:min(500px,100%);max-height:92vh;overflow:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.close-btn{font-size:26px;cursor:pointer;color:var(--mu)}
+.modal-body{padding:20px}
+.form-group{margin-bottom:12px;display:grid;gap:4px}
+.form-group label{font-size:14px;font-weight:500}
+.form-row{display:flex;gap:12px}.form-row .half{flex:1}
+.checkbox-group{display:flex;gap:14px;flex-wrap:wrap}
+.checkbox-group label{font-weight:400;display:flex;gap:6px;align-items:center}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.hint{color:var(--mu);font-size:13px}
+.console{background:#0f2e2b;color:#bfe9d9;border-radius:10px;padding:12px;height:260px;overflow:auto;font-size:13px;white-space:pre-wrap}
+.how-to{padding-left:18px;display:grid;gap:8px;margin-bottom:10px}
+@media(max-width:800px){.sidebar{width:64px}.sidebar h2,.nav-links li{font-size:0}.nav-links li i{font-size:18px}.dashboard-widgets,.device-grid,.ai-container{grid-template-columns:1fr}}
+
+.ph{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#dfe9ec;flex-shrink:0}
+.ph.big{width:96px;height:96px}
+.who{display:flex;align-items:center;gap:10px}
+.photo-row{display:flex;gap:14px;align-items:center}
+.btn-col{display:grid;gap:6px}
+#cam-box{margin-top:10px;display:grid;gap:8px;justify-items:start}
+#cam-video{width:100%;max-width:320px;border-radius:10px;background:#000;transform:scaleX(-1)}
+#toasts{position:fixed;right:16px;top:16px;display:grid;gap:8px;z-index:100}
+.toast{background:#fff;border-left:5px solid var(--p);border-radius:10px;padding:10px 14px;box-shadow:0 6px 20px rgba(0,0,0,.18);display:flex;gap:10px;align-items:center;max-width:340px;font-size:14px}
+.toast.ok{border-color:var(--ok)}.toast.warn{border-color:var(--warn)}.toast.bad{border-color:var(--bad)}
+</style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-heartbeat logo-icon"></i>
+                <h2>MediCare</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard-section"><i class="fas fa-home"></i> Tổng quan</li>
+                <li data-target="patients-section"><i class="fas fa-users"></i> Bệnh nhân</li>
+                <li data-target="medications-section"><i class="fas fa-pills"></i> Loại thuốc</li>
+                <li data-target="schedules-section"><i class="fas fa-calendar-alt"></i> Lịch uống thuốc</li>
+                <li data-target="ai-section"><i class="fas fa-robot"></i> Đề xuất AI</li>
+                <li data-target="device-section"><i class="fas fa-plug"></i> Kết nối máy</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Tìm kiếm...">
+                </div>
+                <div class="user-profile">
+                    <span id="conn-badge" class="conn-badge off"><i class="fas fa-circle"></i> <span id="conn-text">Chưa kết nối máy</span></span>
+                    <i class="fas fa-bell notification-icon"></i>
+                    <div class="avatar"><i class="fas fa-user-md"></i></div>
+                    <span>Bác sĩ Quản Trị</span>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <h2 class="section-title">Tổng quan hệ thống</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-info">
+                            <h3>Tổng bệnh nhân</h3>
+                            <p id="stat-total-patients">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-file-medical"></i></div>
+                        <div class="stat-info">
+                            <h3>Đơn thuốc đang dùng</h3>
+                            <p id="stat-active-prescriptions">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-info">
+                            <h3>Cần uống hôm nay</h3>
+                            <p id="stat-due-today">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-widgets">
+                    <div class="widget">
+                        <h3><i class="fas fa-calendar-day"></i> Lịch uống thuốc hôm nay</h3>
+                        <div class="today-schedules" id="today-schedules-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <h3><i class="fas fa-history"></i> Hoạt động gần đây</h3>
+                        <ul class="recent-activities" id="recent-activities-list">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Patients Section -->
+            <section id="patients-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Quản lý bệnh nhân</h2>
+                    <button class="btn btn-primary" onclick="openModal('patient-modal')"><i class="fas fa-plus"></i> Thêm Bệnh Nhân</button>
+                </div>
+                <div class="table-controls">
+                    <input type="text" id="search-patient" placeholder="Tìm tên bệnh nhân..." class="form-control">
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Face ID</th>
+                                <th>Tên Bệnh Nhân</th>
+                                <th>Tuổi</th>
+                                <th>Giới tính</th>
+                                <th>Điện thoại</th>
+                                <th>Tình trạng bệnh</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patients-table-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Medications Section -->
+            <section id="medications-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Danh mục thuốc</h2>
+                </div>
+                <div class="table-controls">
+                    <input type="text" id="search-medication" placeholder="Tìm tên thuốc..." class="form-control">
+                    <select id="filter-medication-type" class="form-control">
+                        <option value="all">Tất cả loại thuốc</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="medications-grid" id="medications-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- Schedules Section -->
+            <section id="schedules-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Lịch uống thuốc</h2>
+                    <button class="btn btn-primary" onclick="openModal('schedule-modal')"><i class="fas fa-plus"></i> Thêm Lịch</button>
+                </div>
+                <div class="schedule-filters">
+                    <select id="schedule-patient-filter" class="form-control">
+                        <option value="all">Tất cả bệnh nhân</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="timeline-container" id="schedule-timeline">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- AI Suggestions Section -->
+            <section id="ai-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Đề xuất thuốc bằng AI</h2>
+                </div>
+                <div class="ai-container">
+                    <div class="ai-input-area">
+                        <div class="form-group">
+                            <label>Chọn Bệnh Nhân:</label>
+                            <select id="ai-patient-select" class="form-control">
+                                <option value="">-- Chọn bệnh nhân --</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Hoặc nhập tình trạng bệnh:</label>
+                            <textarea id="ai-conditions-input" class="form-control" rows="3" placeholder="Ví dụ: Đau đầu, sốt cao, huyết áp cao..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateAISuggestions()"><i class="fas fa-magic"></i> Phân Tích & Đề Xuất</button>
+                    </div>
+                    <div class="ai-result-area">
+                        <div id="ai-typing-indicator" class="hidden">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <span>AI đang phân tích...</span>
+                        </div>
+                        <div id="ai-results" class="ai-results">
+                            <div class="empty-state">
+                                <i class="fas fa-robot"></i>
+                                <p>Chọn bệnh nhân hoặc nhập tình trạng để AI đề xuất phác đồ điều trị.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Device Section -->
+            <section id="device-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Kết nối máy phát thuốc</h2>
+                </div>
+                <div class="device-grid">
+                    <div class="widget">
+                        <h3><i class="fas fa-plug"></i> Arduino Mega 2560</h3>
+                        <div class="btn-row">
+                            <button class="btn btn-primary" id="connect-btn">Kết nối cổng USB</button>
+                            <button class="btn btn-secondary" id="sync-btn">Đồng bộ ngay</button>
+                            <button class="btn btn-secondary" id="check-btn">Kiểm tra máy</button>
+                            <button class="btn btn-secondary" id="disconnect-btn">Ngắt kết nối</button>
+                        </div>
+                        <pre id="serial-console" class="console">Chưa có dữ liệu.</pre>
+                    </div>
+                    <div class="widget">
+                        <h3><i class="fas fa-circle-info"></i> Cách hoạt động</h3>
+                        <ol class="how-to">
+                            <li>Nhập bệnh nhân (kèm Face ID đã học trên HuskyLens), gán thuốc vào ngăn servo 1-3 ở mục Loại thuốc, rồi tạo lịch uống.</li>
+                            <li>Cắm USB, bấm Kết nối. Mỗi lần bạn sửa dữ liệu, web tự đồng bộ xuống máy.</li>
+                            <li>Khi HuskyLens nhận ra mặt, máy tra lịch, xoay servo đúng ngăn và hiện tên thuốc lên màn hình.</li>
+                        </ol>
+                        <p class="hint">Cần Chrome hoặc Edge trên máy tính (Web Serial).</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Patient Modal -->
+    <div id="patient-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="patient-modal-title">Thêm Bệnh Nhân Mới</h3>
+                <span class="close-btn" onclick="closeModal('patient-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="patient-form">
+                    <input type="hidden" id="patient-id">
+                    <div class="form-group">
+                        <label>Ảnh khuôn mặt</label>
+                        <div class="photo-row">
+                            <img id="photo-preview" class="ph big" alt="Ảnh bệnh nhân">
+                            <div class="btn-col">
+                                <button type="button" class="btn btn-secondary btn-sm" id="photo-pick">Chọn ảnh từ máy</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="photo-cam">Chụp bằng webcam</button>
+                                <button type="button" class="btn btn-danger btn-sm" id="photo-clear">Xóa ảnh</button>
+                            </div>
+                        </div>
+                        <div id="cam-box" class="hidden">
+                            <video id="cam-video" autoplay playsinline muted></video>
+                            <button type="button" class="btn btn-primary btn-sm" id="photo-snap">Chụp ảnh</button>
+                        </div>
+                        <input type="file" id="photo-file" accept="image/*" class="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label>Tên Bệnh Nhân *</label>
+                        <input type="text" id="patient-name" class="form-control" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Tuổi *</label>
+                            <input type="number" id="patient-age" class="form-control" required min="0" max="150">
+                        </div>
+                        <div class="form-group half">
+                            <label>Giới Tính *</label>
+                            <select id="patient-gender" class="form-control" required>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Số Điện Thoại</label>
+                            <input type="text" id="patient-phone" class="form-control">
+                        </div>
+                        <div class="form-group half">
+                            <label>Face ID (HuskyLens) *</label>
+                            <select id="patient-face" class="form-control" required></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tình Trạng Bệnh / Tiền Sử</label>
+                        <textarea id="patient-conditions" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('patient-modal')">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu Bệnh Nhân</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thêm Lịch Uống Thuốc</h3>
+                <span class="close-btn" onclick="closeModal('schedule-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="schedule-form">
+                    <div class="form-group">
+                        <label>Bệnh Nhân *</label>
+                        <select id="schedule-patient" class="form-control" required>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Thuốc *</label>
+                        <select id="schedule-medication" class="form-control" required>
+                            <!-- Populated by JS -->
+                        </select>
+                        <small id="schedule-slot-hint" class="hint"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Liều Lượng *</label>
+                        <input type="text" id="schedule-dosage" class="form-control" placeholder="VD: 1 viên, 10ml..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tần Suất Trong Ngày *</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="freq-morning" value="Sáng"> Sáng</label>
+                            <label><input type="checkbox" id="freq-noon" value="Trưa"> Trưa</label>
+                            <label><input type="checkbox" id="freq-evening" value="Chiều"> Chiều</label>
+                            <label><input type="checkbox" id="freq-night" value="Tối"> Tối</label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Ngày Bắt Đầu *</label>
+                            <input type="date" id="schedule-start" class="form-control" required>
+                        </div>
+                        <div class="form-group half">
+                            <label>Ngày Kết Thúc</label>
+                            <input type="date" id="schedule-end" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('schedule-modal')">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu Lịch</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
+const KEY = 'medicare_data_v2', SESS = ['Sáng', 'Trưa', 'Chiều', 'Tối'];
+const FREQ = ['freq-morning', 'freq-noon', 'freq-evening', 'freq-night'];
+const SEED = [
+  ['Paracetamol 500mg', 'Giảm đau - hạ sốt', 'Giảm đau, hạ sốt. Cách nhau ít nhất 4-6 giờ.'],
+  ['Ibuprofen 400mg', 'Giảm đau - hạ sốt', 'Giảm đau, kháng viêm. Uống sau ăn.'],
+  ['Amlodipin 5mg', 'Huyết áp', 'Hạ huyết áp, uống mỗi ngày cùng một giờ.'],
+  ['Metformin 500mg', 'Tiểu đường', 'Kiểm soát đường huyết, uống trong bữa ăn.'],
+  ['Omeprazol 20mg', 'Dạ dày', 'Giảm tiết acid, uống trước ăn sáng.'],
+  ['Cetirizin 10mg', 'Dị ứng', 'Giảm ngứa, mề đay, viêm mũi dị ứng.'],
+  ['Amoxicillin 500mg', 'Kháng sinh', 'Chỉ dùng khi có chỉ định của bác sĩ.'],
+  ['Vitamin C 500mg', 'Vitamin', 'Bổ sung vitamin C.']
+].map((m, i) => ({ id: 'm' + i, name: m[0], type: m[1], desc: m[2], slot: 0 }));
+let db = JSON.parse(localStorage.getItem(KEY) || 'null') || { patients: [], medications: SEED, schedules: [], log: [], acts: [] };
+
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { alert('Bộ nhớ trình duyệt đã đầy. Hãy xóa bớt ảnh hoặc bệnh nhân cũ.'); } };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const plain = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
+const ascii = (s, n) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').replace(/[^\x20-\x7e]/g, '').replace(/,/g, ' ').trim().slice(0, n) || '-';
+const localMs = () => Date.now() - new Date().getTimezoneOffset() * 6e4;
+const todayStr = () => new Date(localMs()).toISOString().slice(0, 10);
+const dayNum = () => Math.floor(localMs() / 864e5);
+const dateNum = s => s ? Math.floor(Date.parse(s + 'T00:00:00Z') / 864e5) : 0;
+const sessNow = () => { const h = new Date().getHours(); return h >= 5 && h < 11 ? 0 : h >= 11 && h < 14 ? 1 : h >= 14 && h < 18 ? 2 : 3; };
+const patient = id => db.patients.find(p => p.id === id);
+const med = id => db.medications.find(m => m.id === id);
+const isActive = s => s.start <= todayStr() && (!s.end || s.end >= todayStr());
+const act = t => { db.acts.push({ t: Date.now(), text: t }); db.acts = db.acts.slice(-30); };
+const fmtTime = t => new Date(t).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+
+/* ---------- Điều hướng & modal ---------- */
+$$('.nav-links li').forEach(li => li.onclick = () => {
+  $$('.nav-links li').forEach(x => x.classList.toggle('active', x === li));
+  $$('.content-section').forEach(s => s.classList.toggle('active', s.id === li.dataset.target));
+});
+function openModal(id) {
+  if (id === 'patient-modal' && !$('#patient-id').value) resetPatientForm();
+  if (id === 'schedule-modal') {
+    if (!db.patients.length) return alert('Hãy thêm bệnh nhân trước.');
+    $('#schedule-start').value = todayStr(); $('#schedule-end').value = ''; $('#schedule-dosage').value = '';
+    FREQ.forEach(f => $('#' + f).checked = false); slotHint();
+  }
+  $('#' + id).classList.add('show');
+}
+function closeModal(id) { $('#' + id).classList.remove('show'); if (id === 'patient-modal') { $('#patient-id').value = ''; stopCam(); } }
+
+/* ---------- Bệnh nhân ---------- */
+$('#patient-face').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8].map(i => `<option value="${i}">ID ${i}</option>`).join('');
+function resetPatientForm() {
+  $('#patient-form').reset(); $('#patient-id').value = ''; setPhoto('');
+  $('#patient-modal-title').textContent = 'Thêm Bệnh Nhân Mới';
+  const used = db.patients.map(p => p.faceId); const free = [1, 2, 3, 4, 5, 6, 7, 8].find(i => !used.includes(i));
+  $('#patient-face').value = free || 1;
+}
+function editPatient(id) {
+  const p = patient(id); resetPatientForm();
+  $('#patient-id').value = id; $('#patient-modal-title').textContent = 'Sửa Bệnh Nhân';
+  $('#patient-name').value = p.name; $('#patient-age').value = p.age; $('#patient-gender').value = p.gender;
+  $('#patient-phone').value = p.phone; $('#patient-face').value = p.faceId; $('#patient-conditions').value = p.cond; setPhoto(p.photo || '');
+  openModal('patient-modal');
+}
+function deletePatient(id) {
+  if (!confirm('Xóa bệnh nhân này và các lịch uống của họ?')) return;
+  db.patients = db.patients.filter(p => p.id !== id); db.schedules = db.schedules.filter(s => s.pid !== id);
+  touch();
+}
+$('#patient-form').onsubmit = e => {
+  e.preventDefault();
+  const id = $('#patient-id').value, face = +$('#patient-face').value;
+  if (db.patients.some(p => p.faceId === face && p.id !== id)) return alert('Face ID ' + face + ' đã gán cho bệnh nhân khác.');
+  const p = { id: id || 'p' + Date.now(), name: $('#patient-name').value.trim(), age: +$('#patient-age').value, gender: $('#patient-gender').value,
+    phone: $('#patient-phone').value, faceId: face, cond: $('#patient-conditions').value, photo: photoData };
+  const i = db.patients.findIndex(x => x.id === id);
+  if (i >= 0) db.patients[i] = p; else { db.patients.push(p); act('Thêm bệnh nhân ' + p.name); }
+  closeModal('patient-modal'); touch();
+};
+$('#search-patient').oninput = renderPatients;
+function renderPatients() {
+  const q = plain($('#search-patient').value);
+  $('#patients-table-body').innerHTML = db.patients.filter(p => plain(p.name).includes(q)).map(p => `<tr>
+    <td><span class="face">${p.faceId}</span></td><td><div class="who">${avatar(p)}${esc(p.name)}</div></td><td>${p.age}</td><td>${esc(p.gender)}</td><td>${esc(p.phone)}</td><td>${esc(p.cond)}</td>
+    <td><button class="btn btn-secondary btn-sm" onclick="editPatient('${p.id}')">Sửa</button> <button class="btn btn-danger btn-sm" onclick="deletePatient('${p.id}')">Xóa</button></td></tr>`).join('')
+    || '<tr><td colspan="7" class="sub">Chưa có bệnh nhân. Bấm Thêm Bệnh Nhân.</td></tr>';
+}
+
+/* ---------- Thuốc & ngăn servo ---------- */
+$('#search-medication').oninput = renderMeds; $('#filter-medication-type').onchange = renderMeds;
+function renderMeds() {
+  const q = plain($('#search-medication').value), t = $('#filter-medication-type').value;
+  $('#medications-grid').innerHTML = db.medications.filter(m => plain(m.name).includes(q) && (t === 'all' || m.type === t)).map(m => `
+    <div class="med-card"><h4>${esc(m.name)}</h4><span class="tag">${esc(m.type)}</span><p class="sub">${esc(m.desc)}</p>
+    <label>Ngăn servo của máy<select class="form-control" onchange="setSlot('${m.id}',+this.value)">
+      <option value="0"${!m.slot ? ' selected' : ''}>Chưa gán</option>
+      ${[1, 2, 3, 4, 5, 6].map(n => `<option value="${n}"${m.slot === n ? ' selected' : ''}>Ngăn ${n}</option>`).join('')}</select></label>
+    ${m.slot ? `<button class="btn btn-secondary btn-sm" onclick="send('TEST,${m.slot}')">Thử xoay servo ${m.slot}</button>` : ''}</div>`).join('');
+}
+function setSlot(id, n) {
+  if (n) db.medications.forEach(m => { if (m.slot === n) m.slot = 0; });
+  med(id).slot = n; touch();
+}
+
+/* ---------- Lịch uống thuốc ---------- */
+$('#schedule-medication').onchange = slotHint;
+function slotHint() {
+  const m = med($('#schedule-medication').value);
+  $('#schedule-slot-hint').textContent = !m ? '' : m.slot ? `Máy sẽ xoay servo ngăn ${m.slot}.` : 'Thuốc này chưa gán ngăn servo. Vào mục Loại thuốc để gán.';
+}
+$('#schedule-form').onsubmit = e => {
+  e.preventDefault();
+  const m = med($('#schedule-medication').value), sess = FREQ.map(f => $('#' + f).checked);
+  if (!m.slot) return alert('Hãy gán ngăn servo cho thuốc này ở mục Loại thuốc trước.');
+  if (!sess.some(Boolean)) return alert('Chọn ít nhất một buổi uống.');
+  db.schedules.push({ id: 's' + Date.now(), pid: $('#schedule-patient').value, mid: m.id, dose: $('#schedule-dosage').value.trim(), sess, start: $('#schedule-start').value, end: $('#schedule-end').value });
+  act(`Thêm lịch ${m.name} cho ${patient($('#schedule-patient').value).name}`);
+  closeModal('schedule-modal'); touch();
+};
+function deleteSchedule(id) { db.schedules = db.schedules.filter(s => s.id !== id); touch(); }
+$('#schedule-patient-filter').onchange = renderSchedules;
+function renderSchedules() {
+  const f = $('#schedule-patient-filter').value;
+  $('#schedule-timeline').innerHTML = db.schedules.filter(s => f === 'all' || s.pid === f).map(s => {
+    const p = patient(s.pid), m = med(s.mid);
+    return `<div class="tl-item"><div><b>${esc(p ? p.name : '(đã xóa)')}</b> · ${esc(m ? m.name : '')}
+      <div class="sub">${esc(s.dose)} · ${s.sess.map((o, i) => o ? SESS[i] : '').filter(Boolean).join(', ')} · ${s.start} → ${s.end || 'không hạn'} · Ngăn ${m ? m.slot : '?'}</div></div>
+      <button class="btn btn-danger btn-sm" onclick="deleteSchedule('${s.id}')">Xóa</button></div>`;
+  }).join('') || '<p class="sub">Chưa có lịch uống thuốc.</p>';
+}
+
+/* ---------- Tổng quan ---------- */
+function renderDash() {
+  const day = todayStr();
+  const taken = new Set(db.log.filter(l => new Date(l.t - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10) === day).map(l => `${l.face}-${l.slot}-${l.sess}`));
+  const rows = []; let due = 0;
+  db.schedules.filter(isActive).forEach(s => {
+    const p = patient(s.pid), m = med(s.mid); if (!p || !m) return;
+    s.sess.forEach((on, i) => {
+      if (!on) return; const done = taken.has(`${p.faceId}-${m.slot}-${i}`); if (!done) due++;
+      rows.push({ i, h: `<div class="today-item"><div class="who">${avatar(p)}<div><b>${esc(p.name)}</b><div class="sub">${esc(m.name)} · ${esc(s.dose)}</div></div></div>
+        <span class="tag ${done ? 'done' : i === sessNow() ? 'now' : ''}">${SESS[i]}${done ? ' - đã nhả' : ''}</span></div>` });
+    });
+  });
+  rows.sort((a, b) => a.i - b.i);
+  $('#stat-total-patients').textContent = db.patients.length;
+  $('#stat-active-prescriptions').textContent = db.schedules.filter(isActive).length;
+  $('#stat-due-today').textContent = due;
+  $('#today-schedules-list').innerHTML = rows.map(r => r.h).join('') || '<p class="sub">Hôm nay chưa có lịch nào.</p>';
+  $('#recent-activities-list').innerHTML = db.acts.slice(-8).reverse().map(a => `<li><span>${esc(a.text)}</span><span class="sub">${fmtTime(a.t)}</span></li>`).join('') || '<li class="sub">Chưa có hoạt động.</li>';
+}
+
+/* ---------- Đề xuất AI (gợi ý theo từ khóa, chỉ để tham khảo) ---------- */
+const RULES = [
+  [['sot', 'dau dau', 'dau nhuc', 'cam cum'], 'Paracetamol 500mg'], [['dau khop', 'viem', 'dau rang'], 'Ibuprofen 400mg'],
+  [['huyet ap', 'tang huyet'], 'Amlodipin 5mg'], [['tieu duong', 'duong huyet'], 'Metformin 500mg'],
+  [['da day', 'trao nguoc', 'o chua'], 'Omeprazol 20mg'], [['di ung', 'ngua', 'me day', 'viem mui'], 'Cetirizin 10mg'],
+  [['nhiem khuan', 'viem hong', 'viem phoi'], 'Amoxicillin 500mg'], [['met moi', 'thieu vitamin', 'de cam'], 'Vitamin C 500mg']];
+function generateAISuggestions() {
+  const p = patient($('#ai-patient-select').value);
+  const text = plain(($('#ai-conditions-input').value || '') + ' ' + (p ? p.cond : ''));
+  if (!text.trim()) return alert('Chọn bệnh nhân hoặc nhập tình trạng bệnh.');
+  $('#ai-typing-indicator').classList.remove('hidden'); $('#ai-results').innerHTML = '';
+  setTimeout(() => {
+    $('#ai-typing-indicator').classList.add('hidden');
+    const hits = RULES.filter(r => r[0].some(k => text.includes(k))).map(r => med(db.medications.find(m => m.name === r[1])?.id)).filter(Boolean);
+    $('#ai-results').innerHTML = (hits.map(m => `<div class="ai-card"><b>${esc(m.name)}</b> <span class="tag">${esc(m.type)}</span><p class="sub">${esc(m.desc)}</p></div>`).join('')
+      || '<div class="empty-state"><i class="fas fa-robot"></i><p>Chưa tìm thấy thuốc phù hợp trong danh mục.</p></div>')
+      + '<p class="sub">Gợi ý chỉ mang tính tham khảo. Bác sĩ cần xác nhận trước khi kê lịch uống.</p>';
+  }, 700);
+}
+
+/* ---------- Render chung ---------- */
+function fillSelects() {
+  const keep = (sel, html) => { const v = sel.value; sel.innerHTML = html; if ([...sel.options].some(o => o.value === v)) sel.value = v; };
+  const pOpts = db.patients.map(p => `<option value="${p.id}">${esc(p.name)} (ID ${p.faceId})</option>`).join('');
+  keep($('#schedule-patient'), pOpts);
+  keep($('#schedule-patient-filter'), '<option value="all">Tất cả bệnh nhân</option>' + pOpts);
+  keep($('#ai-patient-select'), '<option value="">-- Chọn bệnh nhân --</option>' + pOpts);
+  keep($('#schedule-medication'), db.medications.map(m => `<option value="${m.id}">${esc(m.name)} ${m.slot ? '(Ngăn ' + m.slot + ')' : '(chưa gán ngăn)'}</option>`).join(''));
+  keep($('#filter-medication-type'), '<option value="all">Tất cả loại thuốc</option>' + [...new Set(db.medications.map(m => m.type))].map(t => `<option>${esc(t)}</option>`).join(''));
+}
+function render() { fillSelects(); renderDash(); renderPatients(); renderMeds(); renderSchedules(); }
+function touch() { save(); render(); autoSync(); }
+
+/* ---------- Kết nối Arduino (Web Serial) ---------- */
+let port, writer, reader, ack = null, syncTimer = null, syncing = false, initDone = false; const enc = new TextEncoder();
+function con(t) { const c = $('#serial-console'); if (c.dataset.i !== '1') { c.textContent = ''; c.dataset.i = '1'; } c.textContent += t + '\n'; c.scrollTop = c.scrollHeight; }
+function setConn(ok) { $('#conn-badge').classList.toggle('off', !ok); $('#conn-text').textContent = ok ? 'Đã kết nối máy' : 'Chưa kết nối máy'; }
+function send(line) {
+  return new Promise(res => {
+    if (!writer) { con('Chưa kết nối Arduino.'); return res(false); }
+    const t = setTimeout(() => { ack = null; res(false); }, 3000);
+    ack = v => { clearTimeout(t); res(v); };
+    writer.write(enc.encode(line + '\n')); con('> ' + line);
+  });
+}
+function onLine(l) {
+  if (!l) return;
+  if (l === 'OK' && ack) { const a = ack; ack = null; a(true); return; }
+  con('< ' + l);
+  const p = l.split(',');
+  if (p[0] === 'READY' && initDone) {
+    toast('<div><b>Máy vừa khởi động lại</b><br><span class="sub">Đang đồng bộ lại giờ và lịch. Nếu lỗi này lặp lại mỗi lần servo quay thì nguồn đang yếu.</span></div>', 'warn');
+    setTimeout(sync, 1500);
+  }
+  if (p[0] === 'STATUS') {
+    const clock = p[1] === '1', husky = p[2] === '1', n = +p[3], sn = SESS[Math.log2(+p[5])] || '';
+    toast(`<div><b>Trạng thái máy</b><br><span class="sub">Giờ: ${clock ? 'đã đồng bộ' : 'CHƯA có'} · HuskyLens: ${husky ? 'OK' : 'LỖI'}<br>Lịch trong máy: ${n}${clock ? ' · Buổi: ' + sn : ''}</span></div>`, (!clock || !husky || n === 0) ? 'warn' : 'ok');
+  }
+  if (p[0] === 'HUSKY' && huskyState !== p[1]) {
+    huskyState = p[1];
+    toast(p[1] === 'OK' ? '<div><b>HuskyLens đã kết nối</b></div>'
+      : '<div><b>Không kết nối được HuskyLens</b><br><span class="sub">Kiểm tra dây SDA/SCL (chân 20, 21) và đặt Protocol Type = I2C</span></div>', p[1] === 'OK' ? 'ok' : 'bad');
+  }
+  if (p[0] === 'UNLEARNED') toast('<div><b>Thấy khuôn mặt nhưng chưa học</b><br><span class="sub">Trên HuskyLens: hướng camera vào mặt rồi nhấn nút Learn để gán ID</span></div>', 'warn');
+  if (p[0] === 'FACE') {
+    const pt = db.patients.find(x => x.faceId === +p[1]);
+    toast(pt ? `${avatar(pt)}<div><b>Đã nhận diện: ${esc(pt.name)}</b><br><span class="sub">Face ID ${p[1]}</span></div>`
+             : `<div><b>Máy nhận ra Face ID ${p[1]}</b><br><span class="sub">Chưa gán cho bệnh nhân nào trên web</span></div>`, pt ? 'info' : 'warn');
+    act(pt ? `Nhận diện khuôn mặt ${pt.name}` : `Nhận diện Face ID ${p[1]} (chưa gán bệnh nhân)`); save(); render();
+  }
+  if (p[0] === 'RESULT') {
+    const pt = db.patients.find(x => x.faceId === +p[1]), nm = pt ? pt.name : 'Face ID ' + p[1], sn = SESS[Math.log2(+p[3])] || '';
+    const M = {
+      OK: ['ok', `${nm}: máy đã nhả thuốc.`],
+      TAKEN: ['warn', `${nm} đã uống buổi ${sn} rồi nên máy không nhả thêm.`],
+      NOSESSION: ['warn', `${nm} không có lịch uống vào buổi ${sn}. Kiểm tra buổi uống trong Lịch uống thuốc.`],
+      NODATE: ['warn', `Lịch của ${nm} chưa đến ngày bắt đầu hoặc đã hết hạn.`],
+      UNKNOWN: ['bad', `Máy chưa có lịch nào cho Face ID ${p[1]}. Kiểm tra Face ID của bệnh nhân rồi bấm Đồng bộ ngay.`],
+      NOCLOCK: ['bad', 'Máy chưa có giờ nên không nhả thuốc. Bấm Đồng bộ ngay.']
+    }[p[2]];
+    if (M) toast(`<div>${esc(M[1])}</div>`, M[0]);
+  }
+  if (p[0] === 'LOG') {
+    const face = +p[1], slot = +p[2], sess = Math.log2(+p[3]);
+    const pt = db.patients.find(x => x.faceId === face), m = db.medications.find(x => x.slot === slot);
+    db.log.push({ t: Date.now(), face, slot, sess }); db.log = db.log.slice(-300);
+    act(`Máy nhả ${m ? m.name : 'ngăn ' + slot} cho ${pt ? pt.name : 'Face ID ' + face}`); save(); render();
+  }
+}
+async function readLoop() {
+  const dec = new TextDecoderStream(); port.readable.pipeTo(dec.writable).catch(() => {});
+  reader = dec.readable.getReader(); let buf = '';
+  try { for (;;) { const { value, done } = await reader.read(); if (done) break; buf += value; let i;
+    while ((i = buf.indexOf('\n')) >= 0) { onLine(buf.slice(0, i).trim()); buf = buf.slice(i + 1); } } } catch (e) {}
+  writer = null; initDone = false; setConn(false);
+}
+async function connect() {
+  if (!('serial' in navigator)) return alert('Trình duyệt chưa hỗ trợ Web Serial. Hãy dùng Chrome hoặc Edge trên máy tính.');
+  try {
+    port = await navigator.serial.requestPort(); await port.open({ baudRate: 115200 });
+    writer = port.writable.getWriter(); setConn(true); readLoop(); con('Đang chờ Arduino khởi động...');
+    for (let i = 0; i < 15; i++) if (await send('PING')) break;
+    await sync(); initDone = true;
+  } catch (e) { con('Lỗi: ' + e.message); }
+}
+async function disconnect() {
+  try { await reader?.cancel(); writer?.releaseLock(); await port?.close(); } catch (e) {}
+  writer = null; initDone = false; setConn(false); con('Đã ngắt kết nối.');
+}
+async function sync() {
+  if (!writer || syncing) return; syncing = true;
+  for (let i = 0; i < 5; i++) if (await send('PING')) break;
+  const n = new Date(); let k = 0, skipped = 0;
+  await send(`TIME,${dayNum()},${n.getHours()},${n.getMinutes()},${n.getSeconds()}`);
+  await send('CLR');
+  for (const s of db.schedules) {
+    const p = patient(s.pid), m = med(s.mid);
+    if (!p || !m || !m.slot) { skipped++; continue; }
+    if (k >= 20) { con('Máy chứa tối đa 20 lịch, phần còn lại bị bỏ qua.'); break; }
+    const mask = s.sess.reduce((a, v, i) => a | (v ? 1 << i : 0), 0);
+    await send(['ADD', p.faceId, m.slot, mask, dateNum(s.start), dateNum(s.end), ascii(p.name, 15), ascii(m.name, 19), ascii(s.dose, 11)].join(',')); k++;
+  }
+  await send('SAVE'); await send('STATUS'); con(`Đồng bộ xong ${k} lịch${skipped ? `, bỏ qua ${skipped} lịch thiếu ngăn servo` : ''}.`); syncing = false;
+}
+function autoSync() { if (!writer) return; clearTimeout(syncTimer); syncTimer = setTimeout(sync, 800); }
+$('#connect-btn').onclick = connect; $('#sync-btn').onclick = sync; $('#check-btn').onclick = () => send('STATUS'); $('#disconnect-btn').onclick = disconnect;
+
+/* ---------- Thông báo ---------- */
+let huskyState = '';
+function toast(html, kind) {
+  let box = $('#toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; document.body.appendChild(box); }
+  const t = document.createElement('div'); t.className = 'toast ' + (kind || 'info'); t.innerHTML = html; box.appendChild(t);
+  setTimeout(() => t.remove(), 7000);
+}
+
+/* ---------- Ảnh khuôn mặt bệnh nhân ---------- */
+const NOPHOTO = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#dfe9ec"/><circle cx="48" cy="38" r="17" fill="#9db3ba"/><path d="M14 96c2-22 16-32 34-32s32 10 34 32z" fill="#9db3ba"/></svg>');
+let photoData = '', camStream = null;
+const avatar = p => `<img class="ph" src="${p.photo || NOPHOTO}" alt="">`;
+function setPhoto(d) { photoData = d; $('#photo-preview').src = d || NOPHOTO; }
+function setPhotoFrom(src, w, h) {                       // cắt vuông giữa ảnh, thu về 200x200 để nhẹ bộ nhớ
+  const c = document.createElement('canvas'); c.width = c.height = 200;
+  const m = Math.min(w, h); c.getContext('2d').drawImage(src, (w - m) / 2, (h - m) / 2, m, m, 0, 0, 200, 200);
+  setPhoto(c.toDataURL('image/jpeg', 0.8));
+}
+function stopCam() { camStream?.getTracks().forEach(t => t.stop()); camStream = null; $('#cam-box').classList.add('hidden'); }
+$('#photo-pick').onclick = () => $('#photo-file').click();
+$('#photo-file').onchange = e => {
+  const f = e.target.files[0]; if (!f) return; const img = new Image();
+  img.onload = () => { setPhotoFrom(img, img.naturalWidth, img.naturalHeight); URL.revokeObjectURL(img.src); };
+  img.src = URL.createObjectURL(f); e.target.value = '';
+};
+$('#photo-cam').onclick = async () => {
+  try { camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+    $('#cam-video').srcObject = camStream; $('#cam-box').classList.remove('hidden'); }
+  catch (e) { alert('Không mở được webcam: ' + e.message); }
+};
+$('#photo-snap').onclick = () => { const v = $('#cam-video'); setPhotoFrom(v, v.videoWidth, v.videoHeight); stopCam(); };
+$('#photo-clear').onclick = () => setPhoto('');
+render();
+
+</script>
+</body>
+</html>
